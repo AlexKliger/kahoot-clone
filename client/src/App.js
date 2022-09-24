@@ -1,32 +1,37 @@
 // Package imports
 import { useCallback, useState } from 'react'
 import { uid } from 'uid'
-import { joinGame } from './util/api'
+import { joinGame, leaveGame } from './util/api'
 // Component imports
 import Game from './components/Game'
+// CSS import
 import './App.css';
 
-!localStorage.getItem('userId') && localStorage.setItem('userId', uid(4))
+!localStorage.getItem('playerId') && localStorage.setItem('playerId', uid(4))
 
 function App() {
-  const [playerId, setPlayerId] = useState(localStorage.getItem('userId'))
+  const [playerId, setPlayerId] = useState(localStorage.getItem('playerId'))
   const [game, setGame] = useState()
   const [socket, setSocket] = useState()
 
   const handleJoinGame = useCallback(async () => {
     setGame(await joinGame(playerId, 1))
-    setSocket(new WebSocket('ws://localhost:5000'))
-    socket.addEventListener('open', () => {
-      console.log('connection opened to websocket:', socket && socket.url)
+    
+    const mySocket = new WebSocket('ws://localhost:5000')
+    mySocket.addEventListener('open', () => {
+      console.log('connection opened to websocket:', mySocket.url)
+    })
+    mySocket.addEventListener('message', e => {
+      setGame(JSON.parse(e.data))
     })
 
-    socket.addEventListener('message', e => {
-      socket.readyState === WebSocket.OPEN && setGame(JSON.parse(e.data))
-    })
+    setSocket(mySocket)
   })
 
   const handleLeaveGame = useCallback(async () => {
-    console.log('handleLeaveGame')
+    setGame(await leaveGame(playerId, 1))
+    socket.close()
+    setSocket(null)
   })
 
   return (
@@ -34,7 +39,7 @@ function App() {
       {!socket ?
       <button onClick={handleJoinGame}>Join Game</button>
       :
-      <Game game={game} handleLeaveGame={handleLeaveGame} />      }
+      <Game game={game} handleLeaveGame={handleLeaveGame} />}
     </div>
   );
 }
