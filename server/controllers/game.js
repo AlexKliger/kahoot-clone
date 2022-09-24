@@ -1,4 +1,7 @@
 const Game = require('../models/Game')
+const sockets = require('../webSocketServer')
+
+let socketServer = sockets.getSocketServer()
 
 module.exports = {
     create: async (req, res) => {
@@ -14,8 +17,12 @@ module.exports = {
         console.log('/game/join requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
-            !game.players.includes(req.body.userId) && room.players.push(req.body.playerId)
+            !game.players.includes(req.body.playerId) && game.players.push(req.body.playerId)
             await game.save()
+            socketServer = sockets.getSocketServer()
+            socketServer.clients.forEach(client => {
+                client.send(JSON.stringify(game))
+            })
             res.json(game)
         } catch (err) {
             console.log(err)

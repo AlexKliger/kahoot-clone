@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth')
 const gameRoutes = require('./routes/game')
 // Config imports
 const connectDB = require('./config/db')
+const sockets = require('./webSocketServer')
 require('./config/passport')(passport)
 require('dotenv').config({path: './config/.env'})
 
@@ -42,7 +43,4 @@ const server = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`)
 })
 
-wsServer = new WebSocket.WebSocketServer({ server: server })
-wsServer.on('connection', (ws, req) => {
-    console.log('websocket connection made with address:', req.socket.remoteAddress)
-})
+sockets.initSocketServer(server)
