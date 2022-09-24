@@ -3,6 +3,11 @@ const sockets = require('../webSocketServer')
 
 let socketServer = sockets.getSocketServer()
 
+const GAME_STATE = {
+    WAITING_FOR_PLAYERS: 'waiting-for-players',
+    GAME_STARTED: 'game-started'
+}
+
 module.exports = {
     create: async (req, res) => {
         console.log('/game/create requested')
@@ -37,6 +42,20 @@ module.exports = {
             res.json(game)
         } catch (err) {
             console.log(err)
+        }
+    },
+    start: async (req, res) => {
+        console.log('/game/start requested')
+        try {
+            const game = await Game.findOneAndUpdate(
+                { gameId: req.body.gameId },
+                { state: GAME_STATE.GAME_STARTED})
+            game.save()
+            socketServer = sockets.getSocketServer()
+            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            res.json(game)
+        } catch (err) {
+            console.log(err)   
         }
     }
 }
