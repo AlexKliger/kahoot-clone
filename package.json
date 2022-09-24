@@ -1,12 +1,19 @@
 {
   "scripts": {
     "start": "cd server && node server.js",
-    "dev": "cd server && nodemon server.js"
+    "dev": "cd server && nodemon server.js --ignore client"
   },
   "dependencies": {
+    "connect-mongo": "^3.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
-    "mongoose": "^6.6.1"
+    "express-session": "^1.17.3",
+    "mongoose": "^6.6.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "uid": "^2.0.0",
+    "ws": "^8.8.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
