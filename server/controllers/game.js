@@ -36,7 +36,7 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.set({players: game.players.filter(playerId => playerId !== req.body.playerId)})
-            game.save()
+            await game.save()
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
@@ -50,7 +50,7 @@ module.exports = {
             const game = await Game.findOneAndUpdate(
                 { gameId: req.body.gameId },
                 { state: GAME_STATE.GAME_STARTED})
-            game.save()
+            await game.save()
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
