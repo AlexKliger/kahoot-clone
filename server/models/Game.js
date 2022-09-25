@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { uid } = require('uid')
+const QuestionSchema = require('./Question')
 
 const GAME_STATE = {
     WAITING_FOR_PLAYERS: 'waiting-for-players',
@@ -14,6 +15,14 @@ const GameSchema = new mongoose.Schema({
     state: {
         type: String,
         default: GAME_STATE.WAITING_FOR_PLAYERS
+    },
+    questions: {
+        type: [QuestionSchema],
+        default: []
+    },
+    currentQuestion: {
+        type: Number,
+        default: 0
     },
     gameId: {
         type: String,
