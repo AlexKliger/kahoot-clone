@@ -1,7 +1,7 @@
 // Package imports
 import { useCallback, useState } from 'react'
 import { uid } from 'uid'
-import { joinGame, leaveGame, startGame } from './util/api'
+import { joinGame, leaveGame } from './util/api'
 // Component imports
 import Game from './components/Game'
 // CSS import
@@ -39,7 +39,7 @@ function App() {
       {!socket ?
       <button onClick={handleJoinGame}>Join Game</button>
       :
-      <Game game={game} handleLeaveGame={handleLeaveGame} startGame={startGame} />}
+      <Game game={game} handleLeaveGame={handleLeaveGame} setGame={setGame} />}
     </div>
   );
 }
