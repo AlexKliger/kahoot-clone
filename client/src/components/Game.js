@@ -1,9 +1,11 @@
+import { startGame, nextQuestion, prevQuestion } from '../util/api'
+
 const GAME_STATE = {
     WAITING_FOR_PLAYERS: 'waiting-for-players',
     GAME_STARTED: 'game-started'
 }
 
-const Game = ({ game, handleLeaveGame, startGame }) => {
+const Game = ({ game, handleLeaveGame, setGame }) => {
     return (
         <section>
             {game.state === GAME_STATE.GAME_STARTED &&
@@ -18,6 +20,8 @@ const Game = ({ game, handleLeaveGame, startGame }) => {
                     ))
                     }   
                 </ul>
+                <button onClick={async () => setGame(await prevQuestion(game.gameId))}>Prev</button>
+                <button onClick={async () => setGame(await nextQuestion(game.gameId))}>Next</button>
             </div>}
 
             <ul>
@@ -27,8 +31,8 @@ const Game = ({ game, handleLeaveGame, startGame }) => {
                 ))}
             </ul>
 
-            {game.state == GAME_STATE.WAITING_FOR_PLAYERS &&
-            <button onClick={ () => startGame(game.gameId) }>Start Game</button>}
+            {game.state === GAME_STATE.WAITING_FOR_PLAYERS &&
+            <button onClick={ async () => setGame(await startGame(game.gameId)) }>Start Game</button>}
             <button onClick={ handleLeaveGame }>Leave Game</button>
         </section>   
     )
