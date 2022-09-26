@@ -12,7 +12,7 @@ const QuestionSchema = new mongoose.Schema({
     answer: {
         type: Number,
         required: true
-    }  
+    } 
 })
 
 module.exports = QuestionSchema

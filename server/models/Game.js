@@ -24,6 +24,7 @@ const GameSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    submittedAnswers: [{}],
     gameId: {
         type: String,
         default: uid(4)

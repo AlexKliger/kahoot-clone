@@ -8,11 +8,30 @@ const GAME_STATE = {
     GAME_STARTED: 'game-started'
 }
 
+const questions = [
+    {
+        question: '1 + 1',
+        choices: [0, 1, 2, 3],
+        answer: 2
+    },
+    {
+        question: '2 + 2',
+        choices: [2, 3, 4, 5],
+        answer: 2
+    }
+]
+
 module.exports = {
     create: async (req, res) => {
         console.log('/game/create requested')
         try {
-            const game = await Game.create({gameId: 1})
+            const game = await Game.create(
+                {
+                    gameId: 1,
+                    questions: questions,
+                })
+            questions.forEach(() => game.submittedAnswers.push({}))
+            await game.save()
             res.json(game)
         } catch (err) {
             console.log(err)
