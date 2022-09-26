@@ -26,8 +26,8 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
 
             <ul>
                 <h3>Players</h3>
-                {game.players.map((playerId, key) => (
-                    <li key={key}>{playerId}</li>
+                {game.players.map((player, key) => (
+                    <li key={key}>{player.playerId}</li>
                 ))}
             </ul>
 
