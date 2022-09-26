@@ -5,5 +5,6 @@ const router = express.Router()
 
 router.post('/next', questionController.next)
 router.post('/previous', questionController.previous)
+router.post('/submitAnswer', questionController.submitAnswer)
 
 module.exports = router
