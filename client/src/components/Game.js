@@ -1,11 +1,11 @@
-import { startGame, nextQuestion, prevQuestion } from '../util/api'
+import { startGame, nextQuestion, prevQuestion, submitAnswer } from '../util/api'
 
 const GAME_STATE = {
     WAITING_FOR_PLAYERS: 'waiting-for-players',
     GAME_STARTED: 'game-started'
 }
 
-const Game = ({ game, handleLeaveGame, setGame }) => {
+const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
     return (
         <section>
             {game.state === GAME_STATE.GAME_STARTED &&
@@ -16,7 +16,7 @@ const Game = ({ game, handleLeaveGame, setGame }) => {
                     <h3>Options</h3>
                     {
                     game.questions[game.currentQuestion].choices.map((choice, key) => (
-                        <li key={key}><button>{choice}</button></li>
+                        <li key={key}><button onClick={() => submitAnswer(playerId, game.gameId, choice)}>{choice}</button></li>
                     ))
                     }   
                 </ul>

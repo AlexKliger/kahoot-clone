@@ -39,7 +39,7 @@ function App() {
       {!socket ?
       <button onClick={handleJoinGame}>Join Game</button>
       :
-      <Game game={game} handleLeaveGame={handleLeaveGame} setGame={setGame} />}
+      <Game game={game} handleLeaveGame={handleLeaveGame} setGame={setGame} playerId={playerId} />}
     </div>
   );
 }
