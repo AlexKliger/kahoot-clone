@@ -41,7 +41,7 @@ module.exports = {
         console.log('/game/join requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
-            game.addPlayer(req.body.playerId)
+            game && game.addPlayer(req.body.playerId)
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
@@ -53,8 +53,7 @@ module.exports = {
         console.log('/game/leave requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
-            game && game.set({players: game.players.filter(playerId => playerId !== req.body.playerId)})
-            await game.save()
+            game && game.removePlayer(req.body.playerId)
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)

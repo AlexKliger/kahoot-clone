@@ -17,6 +17,13 @@ const methods = {
             && this.players.push({ playerId: playerId })
         this.save()
         return this
+    },
+    removePlayer: async function (playerId) {
+        // If the player is part 
+        this.players.some(player => player.playerId === playerId)
+            && this.players.filter(player => player.id !== playerId)
+        this.save()
+        return this
     }
 }
 
