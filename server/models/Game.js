@@ -10,6 +10,13 @@ const GAME_STATE = {
 }
 
 const methods = {
+    start: async function () {
+        if (this.state === GAME_STATE.WAITING_FOR_PLAYERS) {
+            this.state = GAME_STATE.GAME_STARTED
+        }
+        this.save()
+        return this
+    },
     reset: async function () {
         this.currentQuestion = 0
         this.players.forEach(player => player.score = 0)

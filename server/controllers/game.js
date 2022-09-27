@@ -68,10 +68,8 @@ module.exports = {
     start: async (req, res) => {
         console.log('/game/start requested')
         try {
-            const game = await Game.findOneAndUpdate(
-                { gameId: req.body.gameId },
-                { state: GAME_STATE.GAME_STARTED})
-            await game.save()
+            const game = await Game.findOne({ gameId: req.body.gameId })
+            await game.start()
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
