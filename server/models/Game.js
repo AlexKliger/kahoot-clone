@@ -3,8 +3,6 @@ const { uid } = require('uid')
 const QuestionSchema = require('./Question')
 const PlayerSchema = require('./Player')
 
-const Player = mongoose.model('Player', PlayerSchema)
-
 const GAME_STATE = {
     WAITING_FOR_PLAYERS: 'waiting-for-players',
     GAME_STARTED: 'game-started'
@@ -15,14 +13,40 @@ const methods = {
         // If the player does not already exist, add them to the game.
         !this.players.some(player => player.playerId === playerId)
             && this.players.push({ playerId: playerId })
-        this.save()
+        await this.save()
+        
         return this
     },
     removePlayer: async function (playerId) {
         // If the player is part 
         this.players.some(player => player.playerId === playerId)
             && this.players.filter(player => player.id !== playerId)
-        this.save()
+        await this.save()
+
+        return this
+    },
+    nextQuestion: async function () {
+        this.players.forEach(player => {
+            const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
+            const correctAnswer = this.questions[this.currentQuestion].answer
+            // If player chooses the correct answer, increment score.
+            playerAnswer === correctAnswer && player.score++
+        })
+        this.currentQuestion++
+        await this.save()
+
+        return this
+    },
+    prevQuestion: async function () {
+        this.currentQuestion--
+        this.players.forEach(player => {
+            const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
+            const correctAnswer = this.questions[this.currentQuestion].answer
+            // If player chose the correct answer, decrement score.
+            playerAnswer === correctAnswer && player.score--
+        })
+        await this.save()
+
         return this
     }
 }

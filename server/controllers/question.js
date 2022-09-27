@@ -7,11 +7,8 @@ module.exports = {
     next: async (req, res) => {
         console.log('/game/questions/next requested')
         try {
-            const game = await Game.findOne(
-                { gameId: req.body.gameId }
-            )
-            game && game.set({currentQuestion: game.currentQuestion + 1})
-            await game.save()
+            const game = await Game.findOne({ gameId: req.body.gameId })
+            game && await game.nextQuestion()
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
@@ -22,11 +19,8 @@ module.exports = {
     previous: async (req, res) => {
         console.log('/game/questions/next requested')
         try {
-            const game = await Game.findOne(
-                { gameId: req.body.gameId }
-            )
-            game && game.set({currentQuestion: game.currentQuestion - 1})
-            await game.save()
+            const game = await Game.findOne({ gameId: req.body.gameId })
+            game && await game.prevQuestion()
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
