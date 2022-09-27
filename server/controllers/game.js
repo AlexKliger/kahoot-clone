@@ -18,6 +18,10 @@ const questions = [
         question: '2 + 2',
         choices: [2, 3, 4, 5],
         answer: 2
+    },
+    {
+        question: '3 - 5',
+        choices: [-2, -1, 0, 1]
     }
 ]
 
@@ -73,6 +77,18 @@ module.exports = {
             res.json(game)
         } catch (err) {
             console.log(err)   
+        }
+    },
+    reset: async (req, res) => {
+        console.log('/game/reset requested')
+        try {
+            const game = await Game.findOne({gameId: req.body.gameId})
+            await game.reset()
+            socketServer = sockets.getSocketServer()
+            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            res.json(game)
+        } catch (err) {
+            console.log(err)
         }
     }
 }
