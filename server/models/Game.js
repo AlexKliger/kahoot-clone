@@ -33,11 +33,12 @@ const methods = {
         return this
     },
     removePlayer: async function (playerId) {
+        const players = this.players.filter(player => player.playerId !== playerId)
         // If the player is part of the game, remove them.
         this.players.some(player => player.playerId === playerId)
-            && this.players.filter(player => player.id !== playerId)
+            && this.set('players', players)
         await this.save()
-
+        
         return this
     },
     nextQuestion: async function () {
@@ -48,11 +49,11 @@ const methods = {
                 const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
                 const correctAnswer = this.questions[this.currentQuestion].answer
                 // If player chooses the correct answer, increment score.
-                playerAnswer === correctAnswer && player.score++
+                if (playerAnswer === correctAnswer) player.score++
             })
             this.currentQuestion++
         }
-
+        
         await this.save()
 
         return this

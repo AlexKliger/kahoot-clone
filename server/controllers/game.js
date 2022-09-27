@@ -3,11 +3,6 @@ const sockets = require('../webSocketServer')
 
 let socketServer = sockets.getSocketServer()
 
-const GAME_STATE = {
-    WAITING_FOR_PLAYERS: 'waiting-for-players',
-    GAME_STARTED: 'game-started'
-}
-
 const questions = [
     {
         question: '1 + 1',
@@ -21,7 +16,8 @@ const questions = [
     },
     {
         question: '3 - 5',
-        choices: [-2, -1, 0, 1]
+        choices: [-2, -1, 0, 1],
+        answer: 0
     }
 ]
 
