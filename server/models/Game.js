@@ -26,6 +26,8 @@ const methods = {
         return this
     },
     nextQuestion: async function () {
+        if (this.currentQuestion >= this.questions.length - 1) return this
+
         this.players.forEach(player => {
             const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
             const correctAnswer = this.questions[this.currentQuestion].answer
@@ -38,6 +40,8 @@ const methods = {
         return this
     },
     prevQuestion: async function () {
+        if (this.currentQuestion <= 0) return this
+
         this.currentQuestion--
         this.players.forEach(player => {
             const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
