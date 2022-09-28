@@ -1,5 +1,10 @@
 import { GET, DELETE, POST, PUT } from './fetch'
 
+export const createGame = async (hostId) => {
+    const config = {body: JSON.stringify({ hostId: hostId })}
+    return await POST('http://localhost:5000/game/create', config)
+}
+
 export const joinGame = async (playerId, gameId) => {
     const config = {body: JSON.stringify({ playerId: playerId, gameId: gameId })}
     return await POST('http://localhost:5000/game/join', config)
