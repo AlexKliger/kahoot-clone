@@ -4,6 +4,7 @@ import { uid } from 'uid'
 import { joinGame, leaveGame, createGame } from './util/api'
 // Component imports
 import Game from './components/Game'
+import JoinGame from './components/JoinGame'
 // CSS import
 import './App.css';
 
@@ -14,8 +15,8 @@ function App() {
   const [game, setGame] = useState()
   const [socket, setSocket] = useState()
 
-  const handleJoinGame = useCallback(async () => {
-    setGame(await joinGame(playerId, 1))
+  const handleJoinGame = useCallback(async (playerName) => {
+    setGame(await joinGame(playerId, playerName, 1))
     
     const mySocket = new WebSocket('ws://localhost:5000')
     mySocket.addEventListener('open', () => {
@@ -38,8 +39,8 @@ function App() {
     <div className="App">
       {!socket ?
       <div>
-        <button onClick={() => createGame(playerId)}>Create Game</button>
-        <button onClick={handleJoinGame}>Join Game</button>
+        <button onClick={() => createGame(playerId)}>Claim Host</button>
+        <JoinGame handleSubmit={handleJoinGame} />
       </div>
       :
       <Game game={game} setGame={setGame} handleLeaveGame={handleLeaveGame} playerId={playerId} />}

@@ -5,8 +5,8 @@ export const createGame = async (hostId) => {
     return await POST('http://localhost:5000/game/create', config)
 }
 
-export const joinGame = async (playerId, gameId) => {
-    const config = {body: JSON.stringify({ playerId: playerId, gameId: gameId })}
+export const joinGame = async (playerId, playerName, gameId) => {
+    const config = {body: JSON.stringify({ playerId: playerId, playerName: playerName, gameId: gameId })}
     return await POST('http://localhost:5000/game/join', config)
 }
 

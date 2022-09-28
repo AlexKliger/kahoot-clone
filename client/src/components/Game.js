@@ -15,7 +15,7 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
                 <ul>
                     <h2>Waiting for players...</h2>
                     {game.players.map((player, key) => (
-                    <li key={key}>{player.playerId}</li>
+                    <li key={key}>{player.playerName}</li>
                     ))}
                 </ul>
                 <button onClick={ async () => setGame(await startGame(game.gameId)) }>Start Game</button>
@@ -48,7 +48,7 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
                 <ul>
                     <h3>Players</h3>
                     {game.players.map((player, key) => (
-                    <li key={key}>{player.playerId} score: {player.score}</li>
+                    <li key={key}>{player.playerName} score: {player.score}</li>
                     ))}
                 </ul>
             </div>
@@ -59,7 +59,7 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
             <ul>
                 <h2>Waiting for players...</h2>
                 {game.players.map((player, key) => (
-                <li key={key}>{player.playerId} score: {player.score}</li>
+                <li key={key}>{player.playerName} score: {player.score}</li>
             ))}
             </ul>
             }
