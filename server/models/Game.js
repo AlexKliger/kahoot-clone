@@ -79,6 +79,10 @@ const GameSchema = new mongoose.Schema({
         type: [PlayerSchema],
         default: []
     },
+    host: {
+        type: String,
+        required: true
+    },
     state: {
         type: String,
         default: GAME_STATE.WAITING_FOR_PLAYERS

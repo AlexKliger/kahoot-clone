@@ -25,10 +25,12 @@ module.exports = {
     create: async (req, res) => {
         console.log('/game/create requested')
         try {
+            await Game.findOneAndDelete({ gameId: 1 })
             const game = await Game.create(
                 {
                     gameId: 1,
                     questions: questions,
+                    host: req.body.hostId
                 })
             questions.forEach(() => game.submittedAnswers.push({}))
             await game.save()
