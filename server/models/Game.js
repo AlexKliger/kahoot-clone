@@ -24,10 +24,10 @@ const methods = {
         this.save()
         return this
     },
-    addPlayer: async function (playerId) {
+    addPlayer: async function (playerId, playerName) {
         // If the player does not already exist, add them to the game.
         !this.players.some(player => player.playerId === playerId)
-            && this.players.push({ playerId: playerId })
+            && this.players.push({ playerId: playerId, playerName: playerName })
         await this.save()
         
         return this

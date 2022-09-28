@@ -43,7 +43,7 @@ module.exports = {
         console.log('/game/join requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
-            game && game.addPlayer(req.body.playerId)
+            game && game.addPlayer(req.body.playerId, req.body.playerName)
             socketServer = sockets.getSocketServer()
             socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
             res.json(game)
