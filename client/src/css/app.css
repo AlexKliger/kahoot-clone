@@ -1,0 +1,17 @@
+.flex-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.margin-centered {
+    margin: 0 auto;
+}
+
+body {
+    background-color: blue;
+}
+
+.App {
+    background-color: red;
+}

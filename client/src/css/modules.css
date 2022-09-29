@@ -1,0 +1,56 @@
+.answer-choices {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    max-width: 200px
+}
+
+    .answer-choices li {
+        width: 50%;
+    }
+
+    .answer-choices button {
+        width: 100%;
+    }
+
+.game {
+    max-width: 360px;
+    background-color: white;
+    text-align: center;
+}
+    .game__waiting-room {
+
+    }
+
+    .game__screen {
+        
+    }
+
+.host-panel {
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+    .host-panel__prev-button {
+        grid-column: 1 / span 1;
+        grid-row: 1 / span 1;
+    }
+
+    .host-panel__next-button {
+        grid-column: 2 / span 1;
+        grid-row: 1 / span 1;
+    }
+    
+    .host-panel__reset-button {
+        grid-column: 1 / span 2;
+        grid-row: 2 / span 1;
+    }
+
+.players {
+    margin: 1.5rem 0;
+}
+
+.question > * {
+    margin: 0.5rem 0;
+}

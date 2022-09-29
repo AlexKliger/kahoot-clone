@@ -6,7 +6,9 @@ import { joinGame, leaveGame, createGame } from './util/api'
 import Game from './components/Game'
 import JoinGame from './components/JoinGame'
 // CSS import
-import './App.css';
+import './css/app.css';
+import './css/modules.css'
+import './css/themes.css'
 
 !localStorage.getItem('playerId') && localStorage.setItem('playerId', uid(4))
 

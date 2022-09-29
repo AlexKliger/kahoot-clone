@@ -1,0 +1,23 @@
+:root {
+    --font-size--extra-small: 14px;
+    --font-size--small: 16px;
+    --font-size--medium: 18px;
+    --font-size--large: 24px;
+    --font-size--extra-large: 30px;
+}
+
+.font-size--extra-small {
+    font-size: var(--font-size--extra-small);
+}
+.font-size--small {
+    font-size: var(--font-size--small);
+}
+.font-size--medium {
+    font-size: var(--font-size--medium);
+}
+.font-size--large {
+    font-size: var(--font-size--large);
+}
+.font-size--extra-large {
+    font-size: var(--font-size--extra-large);
+}
