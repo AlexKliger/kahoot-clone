@@ -10,7 +10,7 @@ class QuestionGenerator {
     }
 }
 
-SIGN = {
+const SIGN = {
     POSITIVE: 'positive',
     NEGATIVE: 'negative'
 }
@@ -46,6 +46,8 @@ class Integer extends Number {
 // Operators
 class Operator {
     regrouping
+    leftNum
+    rightNum
 
     constructor(regrouping) {
         this.regrouping
@@ -57,8 +59,6 @@ class Operator {
 }
 
 class Plus extends Operator {
-    leftNum
-    rightNum
 
     generateQuestion(leftNumType, rightNumType) {
         this.leftNum = leftNumType.generateNumber()
@@ -94,7 +94,79 @@ class Plus extends Operator {
     }
 }
 
+class Minus extends Operator {
+
+    generateQuestion(leftNumType, rightNumType) {
+        this.leftNum = leftNumType.generateNumber()
+        this.rightNum = rightNumType.generateNumber()
+        console.log('original leftNum:', this.leftNum, '  rightNum:', this.rightNum)
+        // If regrouping is false and both numbers are integers...
+        if (!this.regrouping && leftNumType instanceof Integer && rightNumType instanceof Integer) {
+            // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
+            const maxDigits = Math.max(leftNumType.digits, rightNumType.digits)
+            const leftNum = this.leftNum.toString().padStart(maxDigits, 0).split('')
+            const rightNum = this.rightNum.toString().padStart(maxDigits, 0).split('')
+            for (let i = maxDigits - 1; i >= 0; i--) {
+                console.log('place value index:', i)
+                const digitOfLeft = parseInt(leftNum[i])
+                const digitOfRight = parseInt(rightNum[i])
+                // If the difference of the given place value is less than 0...
+                if (digitOfLeft - digitOfRight < 0) {
+                    console.log('   difference for given place value less than 0')
+                    // Switch the digits so the greater number is in leftNum.
+                    leftNum[i] = digitOfRight
+                    rightNum[i] = digitOfLeft
+                    this.leftNum = parseInt(leftNum.join(''))
+                    this.rightNum = parseInt(rightNum.join(''))
+                }
+            }
+        }
+        
+        return this.leftNum + ' - ' + this.rightNum
+    }
+}
+
+class Times extends Operator {
+    generateQuestion(leftNumType, rightNumType) {
+        this.leftNum = leftNumType.generateNumber()
+        this.rightNum = rightNumType.generateNumber()
+
+        // If regrouping is false and both numbers are integers...
+        if (!this.regrouping && leftNumType instanceof Integer && rightNumType instanceof Integer) {
+            // Convert numbers to array of digits to make indexing easier.
+            console.log('original leftNum:', this.leftNum, '  rightNum', this.rightNum)
+            const leftNum = this.leftNum.toString().split('')
+            const rightNum = this.rightNum.toString().split('')
+            // For every digit in the right number starting from the one's digit...
+            for (let i = rightNum.length - 1; i >= 0; i--) {
+                const digitOfRight = rightNum[i]
+                // And for every digit in the left number starting from the one's digit...
+                for (let j = leftNum.length - 1; j >= 0; j--) {
+                    const digitOfLeft = leftNum[j]
+                    // If the product of the respective digits is greater than 9...
+                    if (digitOfRight * digitOfLeft > 9) {
+                        console.log('   product greater than 9 at i:', i, '  j:', j)
+                        let amountOverNine = leftNum[j] * rightNum[i] - 9
+                        console.log('   amount over 9 before adjustment:', amountOverNine)
+                        while (amountOverNine > 0) {
+                            // Randomly decrement one of the digits.
+                            Math.round(Math.random() * 1) ? rightNum[i]-- : leftNum[j]--
+                            amountOverNine = leftNum[j] * rightNum[i] - 9
+                            console.log('       new leftNum:', leftNum.join(''), '  rightNum:', rightNum.join(''))
+                            console.log('       amount over 9:', amountOverNine)
+                        }
+                    }
+                }
+            }
+            this.leftNum = leftNum.join('')
+            this.rightNum = rightNum.join('')
+        }
+
+        return this.leftNum + ' x ' + this.rightNum
+    }
+}
+
 const integer1 = new Integer('positive', 3)
 const integer2= new Integer('positive', 2)
-const plus = new Plus(false)
-console.log(plus.generateQuestion(integer1, integer2))
+const times = new Times(false)
+console.log(times.generateQuestion(integer1, integer2))
