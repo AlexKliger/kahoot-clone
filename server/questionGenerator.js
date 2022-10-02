@@ -1,3 +1,5 @@
+const e = require("cors")
+
 class QuestionGenerator {
     leftNum
     rightNum
@@ -166,7 +168,28 @@ class Times extends Operator {
     }
 }
 
+class DivideBy extends Operator {
+    remainderRequired
+
+    constructor(regrouping, hasRemainder) {
+        super(regrouping)
+        this.remainderRequired = hasRemainder
+    }
+
+    generateQuestion(leftNumType, rightNumType) {
+        this.leftNum = leftNumType.generateNumber()
+        this.rightNum = rightNumType.generateNumber()
+        // If remainder is false and both numbers are integers...
+        if (!this.remainderRequired && leftNumType instanceof Integer && rightNumType instanceof Integer) {
+            // Subtract the remainder from the dividend.
+            const remainder = this.leftNum % this.rightNum
+            this.leftNum -= remainder
+        }
+        return this.leftNum + ' / ' + this.rightNum
+    }
+}
+
 const integer1 = new Integer('positive', 3)
-const integer2= new Integer('positive', 2)
-const times = new Times(false)
-console.log(times.generateQuestion(integer1, integer2))
+const integer2= new Integer('positive', 1)
+const divideBy = new DivideBy(false)
+console.log(divideBy.generateQuestion(integer1, integer2))
