@@ -1,63 +1,100 @@
-const QUESTION_TYPE = {
-    ARITHMETIC: 'arithmetic',
-    FRACTIONS: 'fractions'
-}
+class QuestionGenerator {
+    leftNum
+    rightNum
+    operation
 
-function generateQuestions(questionCount, config) {
-    const questions = []
-    for (let i = 0; i < question; i++) {
-        questions.push(generateQuestion(config))
-    }
-
-    return questions
-}
-
-function generateRandomQuestion(config) {
-    const question = {}
-    switch (config.type) {
-        case QUESTION_TYPE.ARITHMETIC:
-            const operator = random.choice(config.operators)
-            return generateArithmeticQuestion(operator, config.digits)
-        case QUESTION_TYPE.FRACTIONS:
-            break
-        default:
-            return null
+    constructor(leftNum, rightNum, operation) {
+        this.leftNum = leftNum
+        this.rightNum = rightNum
+        this.operation = operation
     }
 }
 
-function generateArithmeticQuestion(operator, digits) {
-    switch(operator) {
-        case '+':
-            return generateAdditionQuestion(generateRange(digits))
-        case '-':
-            return generateSubtractionQuestion(generateRange(digits))
-        case '*':
-            break
-        case '/':
-            break
-        default:
-            return null
+SIGN = {
+    POSITIVE: 'positive',
+    NEGATIVE: 'negative'
+}
+
+// Numbers
+class Number {
+    sign
+
+    constructor(sign) {
+        this.sign = sign
+    }
+
+    generateNumber() {
+        console.log('Overide base class implementation.')
     }
 }
 
-function generateRange(digits) {
-    const max = parseInt(Array(digits).fill(9).join(''))
-    const min = parseInt(1 + Array(digits - 1).fill(0).join(''))
-    return {min: min, max: max}
+class Integer extends Number {
+    digits
+
+    constructor(sign, digits) {
+        super(sign)
+        this.digits = digits
+    }
+
+    generateNumber() {
+        const max = parseInt(Array(this.digits).fill(9).join(''))
+        const min = parseInt(1 + Array(this.digits - 1).fill(0).join(''))
+        return Math.floor(Math.random() * (max - min) + min) * (this.sign === SIGN.POSITIVE ? 1 : -1)
+    }
 }
 
-function generateAdditionQuestion(range) {
-    // Generate an addition question.
-    // Question may include regrouping.
-    const num1 = Math.floor(Math.random() * (range.max - range.min) + range.min)
-    const num2 = Math.floor(Math.random() * (range.max - range.min) + range.min)
-    return num1 + '+' + num2
+// Operators
+class Operator {
+    regrouping
+
+    constructor(regrouping) {
+        this.regrouping
+    }
+
+    generateQuestion() {
+        console.log('Overide base class implemenation.')
+    }
 }
 
-function generateSubtractionQuestion(range) {
-    // Generate a subtraction question where the second number is always less than the first.
-    // Question may include regrouping and answer will never be negative.
-    const num1 = Math.floor(Math.random() * (range.max - range.min) + range.min)
-    const num2 = Math.floor(Math.random() * (num1 - range.min) + range.min)
-    return num1 + '-' + num2
+class Plus extends Operator {
+    leftNum
+    rightNum
+
+    generateQuestion(leftNumType, rightNumType) {
+        this.leftNum = leftNumType.generateNumber()
+        this.rightNum = rightNumType.generateNumber()
+        console.log('original leftNum:', this.leftNum, '  rightNum:', this.rightNum)
+        // If regrouping is false and both numbers are integers...
+        if (!this.regrouping && leftNumType instanceof Integer && rightNumType instanceof Integer) {
+            // Convert numbers to string and pad with 0 to make indexing easier.
+            const maxDigits = Math.max(leftNumType.digits, rightNumType.digits)
+            const leftNum = this.leftNum.toString().padStart(maxDigits, 0)
+            const rightNum = this.rightNum.toString().padStart(maxDigits, 0)
+            // For each place value, starting from the "one's place"...
+            for (let i = maxDigits - 1; i >= 0; i--) {
+                console.log('place value index:', i)
+                const digitOfLeft = parseInt(leftNum[i])
+                const digitOfRight = parseInt(rightNum[i])
+                // If the sum of the given place value is greater than 10...
+                if (digitOfLeft + digitOfRight > 9) {
+                    const amountOverNine = digitOfLeft + digitOfRight - 9
+                    console.log('   place value index sum over 9')
+                    console.log('   amount over nine:', amountOverNine)
+                    // Subtract the amount-over-nine from the given digit from either number.
+                    if (Math.round(Math.random() * 1)) {
+                        this.leftNum = this.leftNum - amountOverNine * 10 ** (maxDigits - 1 - i)
+                    } else {
+                        this.rightNum = this.rightNum - amountOverNine * 10 ** (maxDigits - 1 - i)
+                    }
+                }
+            }
+        }
+
+        return this.leftNum.toString() + ' + ' + this.rightNum.toString()
+    }
 }
+
+const integer1 = new Integer('positive', 3)
+const integer2= new Integer('positive', 2)
+const plus = new Plus(false)
+console.log(plus.generateQuestion(integer1, integer2))
