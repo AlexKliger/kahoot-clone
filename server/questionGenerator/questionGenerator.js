@@ -54,9 +54,11 @@ class QuestionGenerator {
     }
 }
 
-const int1 = new numbers.Integer('positive', 3)
-const int2 = new numbers.Integer('positive', 2)
-const op = new operators.DivideBy(false)
+const int1 = new numbers.Integer('positive', 1)
+const int2 = new numbers.Integer('positive', 1)
+const op = new operators.Times(false)
 console.log(op.generateQuestion(int1, int2))
+console.log(op.generateAnswerChoices())
 
-// module.exports = QuestionGenerator
+
+module.exports = QuestionGenerator

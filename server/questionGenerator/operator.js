@@ -16,23 +16,25 @@ class Operator {
         console.log('Overide base class implemenation.')
     }
 
-    #generateAnswerChoices() {
+    generateAnswerChoices() {
         let answerChoices = []
         if (this instanceof Plus) {
-            this.answer = leftNum + rightNum
+            this.answer = this.leftNum + this.rightNum
         } else if (this instanceof Minus) {
-            this.answer = leftNum - rightNum
+            this.answer = this.leftNum - this.rightNum
         } else if (this instanceof Times) {
-            this.answer = leftNum * rightNum
+            this.answer = this.leftNum * this.rightNum
         } else if (this instanceof DivideBy) {
-            this.answer = leftNum / rightNum
+            this.answer = this.leftNum / this.rightNum
         }
         answerChoices.push(this.answer)
-        while (answerChoices.length < answerChoiceCount) {
+        while (answerChoices.length < this.answerChoiceCount) {
             const offset = Math.random() * this.answer * (Math.random() > 0.5 ? 1 : -1)
             const wrongAnswer = Math.floor(this.answer + offset)
-            !choices.includes(wrongAnswer) && choices.push(wrongAnswer)
+            !answerChoices.includes(wrongAnswer) && answerChoices.push(wrongAnswer)
         }
+
+        return answerChoices
     }
 }
 
