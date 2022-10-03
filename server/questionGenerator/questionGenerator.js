@@ -50,15 +50,12 @@ class QuestionGenerator {
     }
 
     generateQuestion() {
-        return this.operation.generateQuestion(this.leftNum, this.rightNum)
+        const text = this.operation.generateQuestion(this.leftNum, this.rightNum)
+        const choices = this.operation.generateAnswerChoices()
+        const answer = this.operation.answer
+        const question = {question: text, answer: answer, choices: choices}
+        return question
     }
 }
-
-const int1 = new numbers.Integer('positive', 1)
-const int2 = new numbers.Integer('positive', 1)
-const op = new operators.Times(false)
-console.log(op.generateQuestion(int1, int2))
-console.log(op.generateAnswerChoices())
-
 
 module.exports = QuestionGenerator
