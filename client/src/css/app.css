@@ -9,9 +9,8 @@
 }
 
 body {
-    background-color: blue;
-}
-
-.App {
-    background-color: red;
+    background-color: #e5e5f7;
+    background-image:  linear-gradient(#444cf7 4.6000000000000005px, transparent 4.6000000000000005px), linear-gradient(90deg, #444cf7 4.6000000000000005px, transparent 4.6000000000000005px), linear-gradient(#444cf7 2.3000000000000003px, transparent 2.3000000000000003px), linear-gradient(90deg, #444cf7 2.3000000000000003px, #e5e5f7 2.3000000000000003px);
+    background-size: 115px 115px, 115px 115px, 23px 23px, 23px 23px;
+    background-position: -4.6000000000000005px -4.6000000000000005px, -4.6000000000000005px -4.6000000000000005px, -2.3000000000000003px -2.3000000000000003px, -2.3000000000000003px -2.3000000000000003px;
 }

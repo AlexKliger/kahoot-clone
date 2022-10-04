@@ -23,7 +23,7 @@ const CreateGamePage = ( { handleSubmit }) => {
     })
 
     return (
-        <section>
+        <section className="create-game-page margin-centered">
             <h2 className="font-size--extra-large">Create New Game</h2>        
 
             <form onSubmit={onSubmit}>

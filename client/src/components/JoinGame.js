@@ -13,6 +13,7 @@ const JoinGame = ({ handleSubmit }) => {
             <input
                 type="text"
                 value={name}
+                placeholder="name"
                 onChange={e => setName(e.target.value)}
             ></input>
 

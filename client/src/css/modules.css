@@ -1,56 +1,86 @@
 .answer-choices {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    max-width: 200px
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    margin: 2rem 0;
 }
 
-    .answer-choices li {
-        width: 50%;
+    .answer-choices__choice {
+        width: 100%;
+        padding: 3rem 0;
     }
 
-    .answer-choices button {
-        width: 100%;
-    }
+.create-game-page {
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
 
 .game {
-    max-width: 360px;
+    max-width: 600px;
+    height: 100vh;
     background-color: white;
     text-align: center;
 }
-    .game__waiting-room {
-
-    }
 
     .game__screen {
-        
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-.host-panel {
+    .game__waiting-room {
+        width: 100%;
+    }
+
+
+.host-controls {
     margin: 1.5rem 0;
     display: grid;
     grid-template-rows: 1fr 1fr;
+    row-gap: 4rem;
 }
 
-    .host-panel__prev-button {
+    .host-controls__prev-button {
         grid-column: 1 / span 1;
         grid-row: 1 / span 1;
     }
 
-    .host-panel__next-button {
+    .host-controls__next-button {
         grid-column: 2 / span 1;
         grid-row: 1 / span 1;
     }
     
-    .host-panel__reset-button {
+    .host-controls__reset-button {
         grid-column: 1 / span 2;
         grid-row: 2 / span 1;
     }
+
+.landing-page {
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
 
 .players {
     margin: 1.5rem 0;
 }
 
-.question > * {
-    margin: 0.5rem 0;
+    .players__header {
+        margin-bottom: 0.5rem;
+    }
+
+    .players__username {
+        margin-bottom: 0.25rem;
+    }
+
+.question {
+    width: 100%;
 }
