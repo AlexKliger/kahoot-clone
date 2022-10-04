@@ -5,7 +5,7 @@ class Operator {
     regrouping
     leftNum
     rightNum
-    answer
+    answerIndex
     answerChoiceCount = 4
 
     constructor(regrouping) {
@@ -17,22 +17,24 @@ class Operator {
     }
 
     generateAnswerChoices() {
-        let answerChoices = []
+        const answerChoices = []
+        let answer
         if (this instanceof Plus) {
-            this.answer = this.leftNum + this.rightNum
+            answer = this.leftNum + this.rightNum
         } else if (this instanceof Minus) {
-            this.answer = this.leftNum - this.rightNum
+            answer = this.leftNum - this.rightNum
         } else if (this instanceof Times) {
-            this.answer = this.leftNum * this.rightNum
+            answer = this.leftNum * this.rightNum
         } else if (this instanceof DivideBy) {
-            this.answer = this.leftNum / this.rightNum
+            answer = this.leftNum / this.rightNum
         }
-        answerChoices.push(this.answer)
-        while (answerChoices.length < this.answerChoiceCount) {
-            const offset = Math.random() * this.answer * (Math.random() > 0.5 ? 1 : -1)
-            const wrongAnswer = Math.floor(this.answer + offset)
+        while (answerChoices.length < this.answerChoiceCount - 1) {
+            const offset = Math.random() * answer * (Math.random() > 0.5 ? 1 : -1)
+            const wrongAnswer = Math.floor(answer + offset)
             !answerChoices.includes(wrongAnswer) && answerChoices.push(wrongAnswer)
         }
+        this.answerIndex = Math.floor(Math.random() * 4)
+        answerChoices.splice(this.answerIndex, 0, answer)
 
         return answerChoices
     }

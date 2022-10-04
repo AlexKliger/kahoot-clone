@@ -6,19 +6,19 @@ const NUMBER_TYPE = {
     FRACTION: 'fraction'
 }
 
-const OPERATION_TYPE = {
+const OPERATOR = {
     PLUS: '+',
     MINUS: '-',
-    TIMES: '*',
+    TIMES: 'x',
     DIVIDE_BY: '/'
 }
 
 class QuestionGenerator {
     leftNum
     rightNum
-    operation
+    operator
 
-    constructor(leftNumConfig, rightNumConfig, operationConfig) {
+    constructor(leftNumConfig, rightNumConfig, operatorConfig) {
         switch (leftNumConfig.type) {
             case NUMBER_TYPE.INTEGER:
                 this.leftNum = new numbers.Integer(leftNumConfig.sign, leftNumConfig.digits)
@@ -31,18 +31,18 @@ class QuestionGenerator {
                 break
         }
 
-        switch (operationConfig.type) {
-            case OPERATION_TYPE.PLUS:
-                this.operation = new operators.Plus(operationConfig.regrouping)
+        switch (operatorConfig.type) {
+            case OPERATOR.PLUS:
+                this.operator = new operators.Plus(operatorConfig.regrouping)
                 break
-            case OPERATION_TYPE.MINUS:
-                this.operation = new operators.Minus(operationConfig.regrouping)
+            case OPERATOR.MINUS:
+                this.operator = new operators.Minus(operatorConfig.regrouping)
                 break
-            case OPERATION_TYPE.TIMES:
-                this.operation = new operators.Times(operationConfig.regrouping)
+            case OPERATOR.TIMES:
+                this.operator = new operators.Times(operatorConfig.regrouping)
                 break
-            case OPERATION_TYPE.DIVIDE_BY:
-                this.operation = new operators.DivideBy(operationConfig.regrouping)
+            case OPERATOR.DIVIDE_BY:
+                this.operator = new operators.DivideBy(operatorConfig.regrouping)
                 break
             default:
                 break
@@ -50,10 +50,9 @@ class QuestionGenerator {
     }
 
     generateQuestion() {
-        const text = this.operation.generateQuestion(this.leftNum, this.rightNum)
-        const choices = this.operation.generateAnswerChoices()
-        const answer = this.operation.answer
-        const question = {question: text, answer: answer, choices: choices}
+        const text = this.operator.generateQuestion(this.leftNum, this.rightNum)
+        const choices = this.operator.generateAnswerChoices()
+        const question = {question: text, answer: this.operator.answerIndex, choices: choices}
         return question
     }
 }
