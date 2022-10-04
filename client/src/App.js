@@ -2,8 +2,9 @@
 import { useCallback, useState } from 'react'
 import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 import { uid } from 'uid'
-import { joinGame, leaveGame, createGame } from './util/api'
+import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
+import CreateGamePage from './components/CreateGamePage'
 import Game from './components/Game'
 import JoinGame from './components/JoinGame'
 // CSS import
@@ -42,6 +43,17 @@ function App() {
     setSocket(null)
   })
 
+  const handleCreateGame = useCallback(async (leftNum, rightNum, operator) => {
+    const leftNumConfig = {type: leftNum, sign: 'positive', digits: 2}
+    const rightNumConfig = {type: rightNum, sign: 'positive', digits: 2}
+    const operatorConfig = {type: operator, regrouping: false}
+    setGame(await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig))
+
+    handleJoinGame('host')
+
+    navigate('/game/play', { replace: true })
+  })
+
   return (
     <div className="App">
       <Routes>
@@ -72,10 +84,7 @@ function App() {
 
           <Route
             path="create"
-            element={ <div>
-                        Placeholder text
-                      </div>
-            }
+            element={ <CreateGamePage handleSubmit={handleCreateGame} /> }
           ></Route>
         </Route>
       </Routes>
