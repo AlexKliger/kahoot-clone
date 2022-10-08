@@ -1,12 +1,12 @@
 // Package imports
 import { useCallback, useState } from 'react'
-import { Route, Routes, Link, useNavigate } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { uid } from 'uid'
 import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
 import CreateGamePage from './components/CreateGamePage'
 import Game from './components/Game'
-import JoinGame from './components/JoinGame'
+import LandingPage from './components/LandingPage'
 // CSS import
 import './css/app.css';
 import './css/modules.css'
@@ -34,40 +34,31 @@ function App() {
     })
 
     setSocket(mySocket)
-  })
+  }, [navigate, playerId])
 
   const handleLeaveGame = useCallback(async () => {
     setGame(await leaveGame(playerId, 1))
     navigate('/', { replace: true })
     socket.close()
     setSocket(null)
-  })
+  }, [navigate, playerId, socket])
 
-  const handleCreateGame = useCallback(async (leftNum, rightNum, operator) => {
-    const leftNumConfig = {type: leftNum, sign: 'positive', digits: 2}
-    const rightNumConfig = {type: rightNum, sign: 'positive', digits: 2}
-    const operatorConfig = {type: operator, regrouping: false}
+  const handleCreateGame = useCallback(async (leftNumConfig, rightNumConfig, operatorConfig) => {
     setGame(await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig))
-
     handleJoinGame('host')
-
     navigate('/game/play', { replace: true })
-  })
+  }, [handleJoinGame, navigate, playerId])
 
   return (
     <div className="App">
       <Routes>
         <Route
           path="/"
-          element={ <div>
-                      <Link to="/game/create">
-                        <button>
-                          Create Game
-                        </button>
-                      </Link>
-                      {/* <button onClick={() => createGame(playerId)}>Claim Host</button> */}
-                      <JoinGame handleSubmit={handleJoinGame} />
-                    </div>
+          element={
+            <LandingPage
+              handleJoinGame={ handleJoinGame }
+              handleCreateGame={ handleCreateGame }
+            />
           }
         ></Route>
 
@@ -75,16 +66,16 @@ function App() {
           <Route
             path="play"
             element={ <Game
-                        game={game}
-                        setGame={setGame}
-                        handleLeaveGame={handleLeaveGame}
-                        playerId={playerId}
+                        game={ game }
+                        setGame={ setGame }
+                        handleLeaveGame={ handleLeaveGame }
+                        playerId={ playerId }
                       /> }
           ></Route>
 
           <Route
             path="create"
-            element={ <CreateGamePage handleSubmit={handleCreateGame} /> }
+            element={ <CreateGamePage handleSubmit={ handleCreateGame } /> }
           ></Route>
         </Route>
       </Routes>
