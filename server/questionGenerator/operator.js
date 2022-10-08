@@ -1,3 +1,4 @@
+const math = require('mathjs')
 const number = require('./number')
 
 // Operators
@@ -8,11 +9,13 @@ class Operator {
     answerIndex
     answerChoiceCount = 4
 
-    constructor(regrouping) {
+    constructor(leftNum, rightNum, regrouping) {
         this.regrouping = regrouping
+        this.leftNum = leftNum
+        this.rightNum = rightNum
     }
 
-    generateQuestion() {
+    generateQuestionString() {
         console.log('Overide base class implemenation.')
     }
 
@@ -20,21 +23,29 @@ class Operator {
         const answerChoices = []
         let answer
         if (this instanceof Plus) {
-            answer = this.leftNum + this.rightNum
+            answer = math.add(this.leftNum.value, this.rightNum.value)
         } else if (this instanceof Minus) {
-            answer = this.leftNum - this.rightNum
+            answer = this.leftNum.value - this.rightNum.value
         } else if (this instanceof Times) {
-            answer = this.leftNum * this.rightNum
+            answer = this.leftNum.value * this.rightNum.value
         } else if (this instanceof DivideBy) {
-            answer = this.leftNum / this.rightNum
+            answer = this.leftNum.value / this.rightNum.value
         }
+        
         while (answerChoices.length < this.answerChoiceCount - 1) {
-            const offset = Math.random() * answer * (Math.random() > 0.5 ? 1 : -1)
-            const wrongAnswer = Math.floor(answer + offset)
-            !answerChoices.includes(wrongAnswer) && answerChoices.push(wrongAnswer)
+            let wrongAnswer
+            if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
+                const offsetNum = Math.round(answer.n * Math.random() * (Math.round(Math.random()) ? -1 : 1))
+                const offsetDen = Math.round(answer.d * Math.random() * (Math.round(Math.random()) ? -1 : 1)) || 1
+                wrongAnswer = math.add(answer, math.fraction(offsetNum, offsetDen))
+            } else {
+                const offset = Math.round(Math.random() * (answer + 10) * (Math.round(Math.random) ? -1 : 1))
+                wrongAnswer = answer + offset
+            }
+            !answerChoices.includes(math.format(wrongAnswer)) && answerChoices.push(math.format(wrongAnswer))
         }
         this.answerIndex = Math.floor(Math.random() * 4)
-        answerChoices.splice(this.answerIndex, 0, answer)
+        answerChoices.splice(this.answerIndex, 0, math.format(answer))
 
         return answerChoices
     }
@@ -42,39 +53,45 @@ class Operator {
 
 class Plus extends Operator {
 
-    generateQuestion(leftNumType, rightNumType) {
-        this.leftNum = leftNumType.generateNumber()
-        this.rightNum = rightNumType.generateNumber()
+    generateQuestionString() {
+        this.leftNum.generateNewValue()
+        this.rightNum.generateNewValue()
         // If regrouping is false and both numbers are integers...
-        if (!this.regrouping && leftNumType instanceof number.Integer && rightNumType instanceof number.Integer) {
-            // Convert numbers to string and pad with 0 to make indexing easier.
-            const maxDigits = Math.max(leftNumType.digits, rightNumType.digits)
-            const leftNum = this.leftNum.toString().padStart(maxDigits, 0)
-            const rightNum = this.rightNum.toString().padStart(maxDigits, 0)
-            // For each place value, starting from the "one's place"...
-            for (let i = maxDigits - 1; i >= 0; i--) {
-                const digitOfLeft = parseInt(leftNum[i])
-                const digitOfRight = parseInt(rightNum[i])
-                // If the sum of the given place value is greater than 10...
-                if (digitOfLeft + digitOfRight > 9) {
-                    const amountOverNine = digitOfLeft + digitOfRight - 9
-                    // Subtract the amount-over-nine from the given digit from either number.
-                    if (Math.round(Math.random() * 1)) {
-                        this.leftNum = this.leftNum - amountOverNine * 10 ** (maxDigits - 1 - i)
-                    } else {
-                        this.rightNum = this.rightNum - amountOverNine * 10 ** (maxDigits - 1 - i)
-                    }
+        if (!this.regrouping &&
+            this.leftNum instanceof number.Integer &&
+            this.rightNum instanceof number.Integer) {
+            this.#adjustForNoRegrouping()
+        }
+
+        return this.leftNum.valueToString() + ' + ' + this.rightNum.valueToString()
+    }
+
+    #adjustForNoRegrouping() {
+        // Convert numbers to string and pad with 0 to make indexing easier.
+        const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
+        const leftNumValue = this.leftNum.value.toString().padStart(maxDigits, 0)
+        const rightNumValue = this.rightNum.value.toString().padStart(maxDigits, 0)
+        // For each place value, starting from the "one's place"...
+        for (let i = maxDigits - 1; i >= 0; i--) {
+            const digitOfLeft = parseInt(leftNumValue[i])
+            const digitOfRight = parseInt(rightNumValue[i])
+            // If the sum of the given place value is greater than 10...
+            if (digitOfLeft + digitOfRight > 9) {
+                const amountOverNine = digitOfLeft + digitOfRight - 9
+                // Subtract the amount-over-nine from the given digit from either number.
+                if (Math.round(Math.random() * 1)) {
+                    this.leftNum.value = this.leftNum.value - amountOverNine * 10 ** (maxDigits - 1 - i)
+                } else {
+                    this.rightNum.value = this.rightNum.value - amountOverNine * 10 ** (maxDigits - 1 - i)
                 }
             }
         }
-
-        return this.leftNum.toString() + ' + ' + this.rightNum.toString()
     }
 }
 
 class Minus extends Operator {
 
-    generateQuestion(leftNumType, rightNumType) {
+    generateQuestionString(leftNumType, rightNumType) {
         this.leftNum = leftNumType.generateNumber()
         this.rightNum = rightNumType.generateNumber()
         // If regrouping is false and both numbers are integers...
@@ -102,7 +119,7 @@ class Minus extends Operator {
 }
 
 class Times extends Operator {
-    generateQuestion(leftNumType, rightNumType) {
+    generateQuestionString(leftNumType, rightNumType) {
         this.leftNum = leftNumType.generateNumber()
         this.rightNum = rightNumType.generateNumber()
 
@@ -144,7 +161,7 @@ class DivideBy extends Operator {
         this.remainderRequired = hasRemainder
     }
 
-    generateQuestion(leftNumType, rightNumType) {
+    generateQuestionString(leftNumType, rightNumType) {
         this.leftNum = leftNumType.generateNumber()
         this.rightNum = rightNumType.generateNumber()
         // If remainder is false and both numbers are integers...

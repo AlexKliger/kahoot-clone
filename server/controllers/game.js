@@ -32,7 +32,7 @@ module.exports = {
             const questions = []
             const questionGenerator = new QuestionGenerator(leftNumConfig, rightNumConfig, operatorConfig)
             for (let i = 0; i < 10; i++) {
-                questions.push(questionGenerator.generateQuestion())
+                questions.push(questionGenerator.generateQuestionObject())
             }
             await Game.findOneAndDelete({ gameId: 1 })
             const game = await Game.create(

@@ -1,3 +1,4 @@
+const { number } = require('mathjs')
 const numbers = require('./number')
 const operators = require('./operator')
 
@@ -13,27 +14,45 @@ const OPERATOR = {
     DIVIDE_BY: '/'
 }
 
+// Class that parses JSON objects and instantiates number and operator objects.
 class QuestionGenerator {
     leftNum
     rightNum
     operator
 
     constructor(leftNumConfig, rightNumConfig, operatorConfig) {
+        // Route the left number type to appropriate class constructor
         switch (leftNumConfig.type) {
             case NUMBER_TYPE.INTEGER:
-                this.leftNum = new numbers.Integer(leftNumConfig.sign, leftNumConfig.digits)
+                this.leftNum = new numbers.Integer(
+                    leftNumConfig.sign,
+                    leftNumConfig.digits)
+                break
+            case NUMBER_TYPE.FRACTION:
+                this.leftNum = new numbers.Fraction(
+                    leftNumConfig.sign,
+                    leftNumConfig.digitsInNum,
+                    leftNumConfig.digitsInDen)
                 break
         }
-
+        // Route the left number type to appropriate class constructor
         switch (rightNumConfig.type) {
             case NUMBER_TYPE.INTEGER:
-                this.rightNum = new numbers.Integer(rightNumConfig.sign, rightNumConfig.digits)
+                this.rightNum = new numbers.Integer(
+                    rightNumConfig.sign,
+                    rightNumConfig.digits)
+                break
+            case NUMBER_TYPE.FRACTION:
+                this.rightNum = new numbers.Fraction(
+                    rightNumConfig.sign,
+                    rightNumConfig.digitsInNum,
+                    rightNumConfig.digitsInDen)
                 break
         }
-
+        // Route the operator type to appropriate class constructor.
         switch (operatorConfig.type) {
             case OPERATOR.PLUS:
-                this.operator = new operators.Plus(operatorConfig.regrouping)
+                this.operator = new operators.Plus(this.leftNum, this.rightNum, operatorConfig.regrouping)
                 break
             case OPERATOR.MINUS:
                 this.operator = new operators.Minus(operatorConfig.regrouping)
@@ -49,8 +68,8 @@ class QuestionGenerator {
         }
     }
 
-    generateQuestion() {
-        const text = this.operator.generateQuestion(this.leftNum, this.rightNum)
+    generateQuestionObject() {
+        const text = this.operator.generateQuestionString(this.leftNum, this.rightNum)
         const choices = this.operator.generateAnswerChoices()
         const question = {question: text, answer: this.operator.answerIndex, choices: choices}
         return question
