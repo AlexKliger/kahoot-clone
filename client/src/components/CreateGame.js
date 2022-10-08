@@ -6,7 +6,7 @@ const CreateGame = ({ handleSubmit }) => {
     const onSubmit = useCallback(e => {
         handleSubmit(password)
         e.preventDefault()
-    }, [password])
+    }, [password, handleSubmit])
 
     return (
         <form onSubmit={onSubmit}>
