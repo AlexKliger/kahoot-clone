@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import Checkbox from './Checkbox'
 
 const NUMBER = {
@@ -6,11 +7,20 @@ const NUMBER = {
 }
 
 const NumberForm = ({ number, setNumber }) => {
+    const handleSelectionChange = useCallback((e) => {
+        console.log('handleSelectionChange')
+        let inputs = {type: e.target.value}
+        if (e.target.value === NUMBER.FRACTION) {
+            inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}
+        }
+        setNumber({...number, ...inputs})
+    })
+
     return (
         <section style={{"display": "flex"}}>
             <label htmlFor="left-number">
                 Left Number
-                <select value={number.type} name="left-number" id="left-number" onChange={e => setNumber({...number, type: e.target.value})}>
+                <select value={number.type} name="left-number" id="left-number" onChange={handleSelectionChange}>
                 {Object.values(NUMBER).map((type, key) => (
                     <option value={type} key={key}>{type}</option>
                 ))}
