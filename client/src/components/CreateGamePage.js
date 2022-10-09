@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import NumberForm from './NumberForm'
 import Checkbox from './Checkbox'
 
 const NUMBER = {
@@ -24,6 +25,7 @@ const CreateGamePage = ( { handleSubmit }) => {
     const [operator, setOperator] = useState({type: OPERATOR.PLUS, regrouping: false})
 
     const onSubmit = useCallback(e => {
+        console.log('onSubmit -> leftNum:', leftNum, 'rightNum:', rightNum, 'operator:', operator)
         handleSubmit(leftNum, rightNum, operator)
         e.preventDefault()
     }, [leftNum, rightNum, operator, handleSubmit])
@@ -33,30 +35,7 @@ const CreateGamePage = ( { handleSubmit }) => {
             <h2 className="font-size--extra-large">Create New Game</h2>        
 
             <form onSubmit={onSubmit}>
-                <div>
-                    <label htmlFor="left-number">Left Number</label>
-                    <select value={leftNum.type} name="left-number" id="left-number" onChange={e => setLeftNum({...leftNum, type: e.target.value})}>
-                        {Object.values(NUMBER).map((type, key) => (
-                            <option value={type} key={key}>{type}</option>
-                        ))}
-                    </select>
-
-                    <Checkbox
-                        label="Negative"
-                        handleChange={e => setLeftNum({...leftNum, sign: e.target.value ? 'negative' : 'positive'})}
-                    />
-
-                    <label>
-                        Digits
-                        <input
-                            type="number"
-                            value={leftNum.digits}
-                            onChange={e => {
-                                setLeftNum({...leftNum, digits: e.target.value})
-                            }}
-                        ></input>
-                    </label>
-                </div>
+                <NumberForm number={leftNum} setNumber={setLeftNum} />
 
                 <div>
                     <label htmlFor="operator">Operator</label>
@@ -81,30 +60,7 @@ const CreateGamePage = ( { handleSubmit }) => {
                     />}
                 </div>
 
-                <div>
-                    <label htmlFor="right-number">Right Number</label>
-                    <select value={rightNum.type} name="right-number" id="right-number" onChange={e => setRightNum({...rightNum, type: e.target.value})}>
-                        {Object.values(NUMBER).map((type, key) => (
-                            <option value={type} key={key}>{type}</option>
-                        ))}
-                    </select>
-
-                    <Checkbox
-                        label="Negative"
-                        handleChange={(e) => setRightNum({...rightNum, sign: e.target.value ? 'negative' : 'positive'})}
-                    />
-
-                    <label>
-                        Digits
-                        <input
-                            type="number"
-                            value={rightNum.digits}
-                            onChange={e => {
-                                setRightNum({...rightNum, digits: e.target.value})
-                            }}
-                        ></input>
-                    </label>
-                </div>
+                <NumberForm number={rightNum} setNumber={setRightNum} />
 
 
                 <input type="submit" value="Create"></input>
