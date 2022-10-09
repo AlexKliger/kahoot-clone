@@ -40,7 +40,7 @@ const NumberForm = ({ number, setNumber }) => {
                         type="number"
                         value={number.digits}
                         onChange={e => {
-                            setNumber({...number, digits: e.target.value})
+                            setNumber({...number, digits: parseInt(e.target.value)})
                         }}
                     ></input>
                 </label>
@@ -52,9 +52,9 @@ const NumberForm = ({ number, setNumber }) => {
                         Digits in numerator
                         <input
                             type="number"
-                            value={number.digitsInNum || 1}
+                            value={number.digitsInNum}
                             onChange={e => {
-                                setNumber({...number, digitsInNum: e.target.value})
+                                setNumber({...number, digitsInNum: parseInt(e.target.value)})
                             }}
                         >
                         </input>
@@ -63,9 +63,9 @@ const NumberForm = ({ number, setNumber }) => {
                         Digits in denominator
                         <input
                             type="number"
-                            value={number.digitsInDen || 1}
+                            value={number.digitsInDen}
                             onChange={e => {
-                                setNumber({...number, digitsInDen: e.target.value})
+                                setNumber({...number, digitsInDen: parseInt(e.target.value)})
                             }}
                         >
                         </input>
