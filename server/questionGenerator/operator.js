@@ -15,8 +15,11 @@ class Operator {
         this.rightNum = rightNum
     }
 
+    
+
     generateQuestionString() {
-        console.log('Overide base class implemenation.')
+        this.leftNum.generateNewValue()
+        this.rightNum.generateNewValue()
     }
 
     generateAnswerChoices() {
@@ -25,11 +28,11 @@ class Operator {
         if (this instanceof Plus) {
             answer = math.add(this.leftNum.value, this.rightNum.value)
         } else if (this instanceof Minus) {
-            answer = this.leftNum.value - this.rightNum.value
+            answer = math.subtract(this.leftNum.value, this.rightNum.value)
         } else if (this instanceof Times) {
-            answer = this.leftNum.value * this.rightNum.value
+            answer = math.multiply(this.leftNum.value, this.rightNum.value)
         } else if (this instanceof DivideBy) {
-            answer = this.leftNum.value / this.rightNum.value
+            answer = math.divide(this.leftNum.value, this.rightNum.value)
         }
         
         while (answerChoices.length < this.answerChoiceCount - 1) {
@@ -54,13 +57,13 @@ class Operator {
 class Plus extends Operator {
 
     generateQuestionString() {
-        this.leftNum.generateNewValue()
-        this.rightNum.generateNewValue()
+        super.generateQuestionString()
         // If regrouping is false and both numbers are integers...
         if (!this.regrouping &&
             this.leftNum instanceof number.Integer &&
             this.rightNum instanceof number.Integer) {
-            this.#adjustForNoRegrouping()
+                // Adjust the generated numbers so that no digit requires regrouping.
+                this.#adjustForNoRegrouping()
         }
 
         return this.leftNum.valueToString() + ' + ' + this.rightNum.valueToString()
@@ -91,86 +94,96 @@ class Plus extends Operator {
 
 class Minus extends Operator {
 
-    generateQuestionString(leftNumType, rightNumType) {
-        this.leftNum = leftNumType.generateNumber()
-        this.rightNum = rightNumType.generateNumber()
+    generateQuestionString() {
+        super.generateQuestionString()
         // If regrouping is false and both numbers are integers...
-        if (!this.regrouping && leftNumType instanceof number.Integer && rightNumType instanceof number.Integer) {
-            // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
-            const maxDigits = Math.max(leftNumType.digits, rightNumType.digits)
-            const leftNum = this.leftNum.toString().padStart(maxDigits, 0).split('')
-            const rightNum = this.rightNum.toString().padStart(maxDigits, 0).split('')
-            for (let i = maxDigits - 1; i >= 0; i--) {
-                const digitOfLeft = parseInt(leftNum[i])
-                const digitOfRight = parseInt(rightNum[i])
-                // If the difference of the given place value is less than 0...
-                if (digitOfLeft - digitOfRight < 0) {
-                    // Switch the digits so the greater number is in leftNum.
-                    leftNum[i] = digitOfRight
-                    rightNum[i] = digitOfLeft
-                    this.leftNum = parseInt(leftNum.join(''))
-                    this.rightNum = parseInt(rightNum.join(''))
-                }
-            }
+        if (!this.regrouping &&
+            this.leftNum instanceof number.Integer
+            && this.rightNum instanceof number.Integer) {
+                // Adjust the generated numbers so that no digit requires regrouping.
+                this.#adjustForNoRegrouping()
         }
         
-        return this.leftNum + ' - ' + this.rightNum
+        return this.leftNum.valueToString() + ' - ' + this.rightNum.valueToString()
+    }
+
+    #adjustForNoRegrouping() {
+        // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
+        const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
+        const leftNumValue = this.leftNum.toString().padStart(maxDigits, 0).split('')
+        const rightNumValue = this.rightNum.toString().padStart(maxDigits, 0).split('')
+        for (let i = maxDigits - 1; i >= 0; i--) {
+            const digitOfLeft = parseInt(leftNumValue[i])
+            const digitOfRight = parseInt(rightNumValue[i])
+            // If the difference of the given place value is less than 0...
+            if (digitOfLeft - digitOfRight < 0) {
+                // Switch the digits so the greater number is in leftNum.
+                leftNumValue[i] = digitOfRight
+                rightNumValue[i] = digitOfLeft
+                this.leftNum = parseInt(leftNum.join(''))
+                this.rightNum = parseInt(rightNum.join(''))
+            }
+        }
     }
 }
 
 class Times extends Operator {
-    generateQuestionString(leftNumType, rightNumType) {
-        this.leftNum = leftNumType.generateNumber()
-        this.rightNum = rightNumType.generateNumber()
+    generateQuestionString() {
+        super.generateQuestionString()
 
         // If regrouping is false and both numbers are integers...
-        if (!this.regrouping && leftNumType instanceof number.Integer && rightNumType instanceof number.Integer) {
-            // Convert numbers to array of digits to make indexing easier.
-            const leftNum = this.leftNum.toString().split('')
-            const rightNum = this.rightNum.toString().split('')
-            // For every digit in the right number starting from the one's digit...
-            for (let i = rightNum.length - 1; i >= 0; i--) {
-                const digitOfRight = rightNum[i]
-                // And for every digit in the left number starting from the one's digit...
-                for (let j = leftNum.length - 1; j >= 0; j--) {
-                    const digitOfLeft = leftNum[j]
-                    // If the product of the respective digits is greater than 9...
-                    if (digitOfRight * digitOfLeft > 9) {
-                        let amountOverNine = leftNum[j] * rightNum[i] - 9
-                        while (amountOverNine > 0) {
-                            // Randomly decrement one of the digits.
-                            Math.round(Math.random() * 1) ? rightNum[i]-- : leftNum[j]--
-                            amountOverNine = leftNum[j] * rightNum[i] - 9
-                        }
+        if (!this.regrouping &&
+            this.leftNumType instanceof number.Integer &&
+            this.rightNumType instanceof number.Integer) {
+                this.#adjustFoRegrouping()
+        }
+
+        return this.leftNum.valueToString() + ' x ' + this.rightNum.valueToString()
+    }
+
+    #adjustFoRegrouping() {
+        // Convert numbers to array of digits to make indexing easier.
+        const leftNumValue = this.leftNum.toString().split('')
+        const rightNumValue = this.rightNum.toString().split('')
+        // For every digit in the right number starting from the one's digit...
+        for (let i = rightNumValue.length - 1; i >= 0; i--) {
+            const digitOfRight = rightNumValue[i]
+            // And for every digit in the left number starting from the one's digit...
+            for (let j = leftNumValue.length - 1; j >= 0; j--) {
+                const digitOfLeft = leftNumValue[j]
+                // If the product of the respective digits is greater than 9...
+                if (digitOfRight * digitOfLeft > 9) {
+                    let amountOverNine = leftNumValue[j] * rightNumValue[i] - 9
+                    while (amountOverNine > 0) {
+                        // Randomly decrement one of the digits.
+                        Math.round(Math.random() * 1) ? rightNumValue[i]-- : leftNumValue[j]--
+                        amountOverNine = leftNumValue[j] * rightNumValue[i] - 9
                     }
                 }
             }
-            this.leftNum = leftNum.join('')
-            this.rightNum = rightNum.join('')
         }
-
-        return this.leftNum + ' x ' + this.rightNum
+        this.leftNum = leftNumValue.join('')
+        this.rightNum = rightNumValue.join('')
     }
 }
 
 class DivideBy extends Operator {
     remainderRequired
 
-    constructor(regrouping, hasRemainder) {
-        super(regrouping)
+    constructor(leftNum, rightNum, hasRemainder) {
+        super(leftNum, rightNum)
         this.remainderRequired = hasRemainder
     }
 
-    generateQuestionString(leftNumType, rightNumType) {
-        this.leftNum = leftNumType.generateNumber()
-        this.rightNum = rightNumType.generateNumber()
+    generateQuestionString() {
+        super.generateQuestionString()
         // If remainder is false and both numbers are integers...
         if (!this.remainderRequired && leftNumType instanceof number.Integer && rightNumType instanceof number.Integer) {
             // Subtract the remainder from the dividend.
             const remainder = this.leftNum % this.rightNum
             this.leftNum -= remainder
         }
-        return this.leftNum + ' / ' + this.rightNum
+        return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
 

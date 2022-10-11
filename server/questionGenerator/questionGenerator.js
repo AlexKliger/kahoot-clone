@@ -55,13 +55,13 @@ class QuestionGenerator {
                 this.operator = new operators.Plus(this.leftNum, this.rightNum, operatorConfig.regrouping)
                 break
             case OPERATOR.MINUS:
-                this.operator = new operators.Minus(operatorConfig.regrouping)
+                this.operator = new operators.Minus(this.leftNum, this.rightNum, operatorConfig.regrouping)
                 break
             case OPERATOR.TIMES:
-                this.operator = new operators.Times(operatorConfig.regrouping)
+                this.operator = new operators.Times(this.leftNum, this.rightNum, operatorConfig.regrouping)
                 break
             case OPERATOR.DIVIDE_BY:
-                this.operator = new operators.DivideBy(operatorConfig.regrouping)
+                this.operator = new operators.DivideBy(this.leftNum, this.rightNum, operatorConfig.hasRemainder)
                 break
             default:
                 break
