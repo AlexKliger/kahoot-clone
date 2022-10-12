@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import NumberForm from './NumberForm'
-import Checkbox from './Checkbox'
+import OperatorForm from './OperatorForm'
 
 const NUMBER = {
     INTEGER: 'integer',
@@ -34,34 +34,12 @@ const CreateGamePage = ( { handleSubmit }) => {
         <section className="create-game-page margin-centered">
             <h2 className="font-size--extra-large">Create New Game</h2>        
 
-            <form onSubmit={onSubmit}>
-                <NumberForm number={leftNum} setNumber={setLeftNum} />
+            <form style={{"width": "100%"}} onSubmit={onSubmit}>
+                <NumberForm number={leftNum} setNumber={setLeftNum} label={"Left Number"}/>
 
-                <div>
-                    <label htmlFor="operator">Operator</label>
-                    <select value={operator.type} name="operator" id="operator" onChange={e => setOperator({...operator, type: e.target.value})}>
-                        {Object.values(OPERATOR).map((type, key) => (
-                            <option value={type} key={key}>{type}</option>
-                        ))}
-                    </select>
+                <OperatorForm operator={operator} setOperator={setOperator} />
 
-                    {(operator.type === OPERATOR.PLUS ||
-                    operator.type === OPERATOR.MINUS ||
-                    operator.type === OPERATOR.TIMES) &&
-                    <Checkbox
-                        label="Regrouping"
-                        handleChange={e => setOperator({...operator, regrouping: true})}
-                    />}
-
-                    {operator.type === OPERATOR.DIVIDE_BY &&
-                    <Checkbox
-                        label="Has Remainder"
-                        handleChange={e => setOperator({...operator, hasRemainder: e.target.value})}
-                    />}
-                </div>
-
-                <NumberForm number={rightNum} setNumber={setRightNum} />
-
+                <NumberForm number={rightNum} setNumber={setRightNum} label={"Right Number"} />
 
                 <input type="submit" value="Create"></input>
             </form>
