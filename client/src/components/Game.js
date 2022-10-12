@@ -1,4 +1,5 @@
 import Players from './Players'
+import WaitingRoom from './WaitingRoom'
 import { startGame, resetGame, nextQuestion, prevQuestion, submitAnswer } from '../util/api'
 
 const GAME_STATE = {
@@ -10,14 +11,9 @@ const GAME_STATE = {
 const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
     return (
         <section className="game flex-centered margin-centered">
-            {game.state === GAME_STATE.WAITING_FOR_PLAYERS &&
-            <section className="game__waiting-room">
-                <h2 className="font-size--extra-large">Waiting for players...</h2>
-                <Players players={game.players} />
-                {game.host === playerId &&
-                <button onClick={ async () => setGame(await startGame(game.gameId)) }>Start Game</button>
-                }       
-            </section>
+            {(game.state === GAME_STATE.WAITING_FOR_PLAYERS ||
+            game.state === GAME_STATE.GAME_ENDED) &&
+            <WaitingRoom game={game} setGame={setGame} playerId={playerId} />
             }
 
             {game.state === GAME_STATE.GAME_STARTED &&
@@ -50,18 +46,6 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
                 <Players players={game.players} />
             </section>
             }
-
-            {
-            game.state === GAME_STATE.GAME_ENDED &&
-            <section>
-                <h2 className="font-size--extra-large">Game Ended</h2>
-                <Players players={game.players} />
-                {game.host === playerId &&
-                <button className="host-panel__reset-button" onClick={ async () => setGame(await resetGame(game.gameId)) }>Reset Game</button>
-                }
-            </section>
-            }
-
             <button onClick={ handleLeaveGame }>Leave Game</button>
         </section>   
     )
