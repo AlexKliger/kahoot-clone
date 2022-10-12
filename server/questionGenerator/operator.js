@@ -55,7 +55,6 @@ class Operator {
 }
 
 class Plus extends Operator {
-
     generateQuestionString() {
         super.generateQuestionString()
         // If regrouping is false and both numbers are integers...
@@ -93,9 +92,14 @@ class Plus extends Operator {
 }
 
 class Minus extends Operator {
-
     generateQuestionString() {
         super.generateQuestionString()
+        // Prevent negative answers (may expand to be optional later)
+        if (this.leftNum.value < this.rightNum.value) {
+            const temp = this.leftNum
+            this.leftNum = this.rightNum
+            this.rightNum = temp
+        }
         // If regrouping is false and both numbers are integers...
         if (!this.regrouping &&
             this.leftNum instanceof number.Integer
@@ -178,7 +182,7 @@ class DivideBy extends Operator {
     generateQuestionString() {
         super.generateQuestionString()
         // If remainder is false and both numbers are integers...
-        if (!this.remainderRequired && leftNumType instanceof number.Integer && rightNumType instanceof number.Integer) {
+        if (!this.remainderRequired && this.leftNum instanceof number.Integer && this.rightNum instanceof number.Integer) {
             // Subtract the remainder from the dividend.
             const remainder = this.leftNum % this.rightNum
             this.leftNum -= remainder
