@@ -69,6 +69,37 @@
     background-color: white;
 }
 
+.number-form {
+    display: flex;
+}
+
+    .number-form__selector {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .number-form__options {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+.operator-form {
+    display: flex;
+}
+
+    .operator-form__selector {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .operator-form__options {
+        align-self: center;
+        flex: 1;
+    }
+
 .players {
     margin: 1.5rem 0;
 }

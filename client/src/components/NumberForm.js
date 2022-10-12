@@ -6,9 +6,8 @@ const NUMBER = {
     FRACTION: 'fraction'
 }
 
-const NumberForm = ({ number, setNumber }) => {
+const NumberForm = ({ number, setNumber, label }) => {
     const handleSelectionChange = useCallback((e) => {
-        console.log('handleSelectionChange')
         let inputs = {type: e.target.value}
         if (e.target.value === NUMBER.FRACTION) {
             inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}
@@ -17,9 +16,9 @@ const NumberForm = ({ number, setNumber }) => {
     })
 
     return (
-        <section style={{"display": "flex"}}>
-            <label htmlFor="left-number">
-                Left Number
+        <section className="number-form">
+            <label className="number-form__selector" htmlFor="left-number">
+                {label}
                 <select value={number.type} name="left-number" id="left-number" onChange={handleSelectionChange}>
                 {Object.values(NUMBER).map((type, key) => (
                     <option value={type} key={key}>{type}</option>
@@ -27,15 +26,12 @@ const NumberForm = ({ number, setNumber }) => {
                 </select>
             </label>
 
-            <div>
-                <Checkbox
-                    label="Negative"
-                    handleChange={e => setNumber({...number, sign: e.target.value ? 'negative' : 'positive'})}
-                />
-
+            <div className="number-form__options">
                 {number.type === NUMBER.INTEGER &&
-                <label>
-                    Digits
+                <>
+                    <label>
+                        Digits
+                    </label>
                     <input
                         type="number"
                         value={number.digits}
@@ -43,35 +39,39 @@ const NumberForm = ({ number, setNumber }) => {
                             setNumber({...number, digits: parseInt(e.target.value)})
                         }}
                     ></input>
-                </label>
+                </>
                 }
 
                 {number.type === NUMBER.FRACTION &&
-                <div style={{"display": "flex", "flexDirection": "column", "alignItems": "flex-end"}}>
+                <>
                     <label>
                         Digits in numerator
-                        <input
+                    </label>
+                    <input
                             type="number"
                             value={number.digitsInNum}
                             onChange={e => {
                                 setNumber({...number, digitsInNum: parseInt(e.target.value)})
                             }}
-                        >
-                        </input>
-                    </label>
+                        ></input>
+
                     <label>
                         Digits in denominator
-                        <input
-                            type="number"
-                            value={number.digitsInDen}
-                            onChange={e => {
-                                setNumber({...number, digitsInDen: parseInt(e.target.value)})
-                            }}
-                        >
-                        </input>
                     </label>
-                </div>
+                    <input
+                        type="number"
+                        value={number.digitsInDen}
+                        onChange={e => {
+                            setNumber({...number, digitsInDen: parseInt(e.target.value)})
+                        }}
+                    ></input>
+                </>
                 }
+
+                <Checkbox
+                    label="Negative"
+                    handleChange={e => setNumber({...number, sign: e.target.value ? 'negative' : 'positive'})}
+                />
             </div>
 
 
