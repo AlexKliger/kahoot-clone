@@ -1,8 +1,9 @@
 .answer-choices {
-    display: grid;
+    width: 90%;
     gap: 1rem;
+    padding: 0 1rem;
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 2rem 0;
 }
 
     .answer-choices__choice {
@@ -112,6 +113,7 @@
         margin-bottom: 0.25rem;
     }
 
-.question {
-    width: 100%;
-}
+    .question {
+        font-weight: bold;
+        margin: 2rem 0;
+    }

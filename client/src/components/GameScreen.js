@@ -1,26 +1,22 @@
 import Players from './Players'
-import { startGame, resetGame, nextQuestion, prevQuestion, submitAnswer } from '../util/api'
-
+import {resetGame, nextQuestion, prevQuestion, submitAnswer } from '../util/api'
 
 const GameScreen = ({ game, setGame, playerId }) => {
     return (
         <section className="game__screen">
-            <div className="question">
-                <h3 className="font-size--large">Question: {game.currentQuestion+1}/{game.questions.length}</h3>
-                <p>What is {game.questions[game.currentQuestion].question}?</p>
-                <ul className="answer-choices">
-                    {game.questions[game.currentQuestion].choices.map((choice, key) => (
-                        <li key={key}>
-                            <button
-                                className="answer-choices__choice font-size--large"
-                                onClick={() => submitAnswer(playerId, game.gameId, key)}
-                            >
-                                {choice}
-                            </button>
-                        </li>
-                    ))}   
-                </ul>
-            </div>
+            <span className="question font-size--extra-large">{game.questions[game.currentQuestion].question}</span>
+            <ul className="answer-choices">
+                {game.questions[game.currentQuestion].choices.map((choice, key) => (
+                    <li key={key}>
+                        <button
+                            className="answer-choices__choice font-size--large"
+                            onClick={() => submitAnswer(playerId, game.gameId, key)}
+                        >
+                            {choice}
+                        </button>
+                    </li>
+                ))}   
+            </ul>
 
             {game.host === playerId && 
             <div className="host-controls">
