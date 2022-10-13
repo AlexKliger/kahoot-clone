@@ -15,11 +15,16 @@ class Operator {
         this.rightNum = rightNum
     }
 
-    
-
     generateQuestionString() {
         this.leftNum.generateNewValue()
         this.rightNum.generateNewValue()
+
+        // If regrouping is false and both numbers are integers...
+        if (!this.regrouping &&
+            this.leftNum instanceof number.Integer &&
+            this.rightNum instanceof number.Integer) {
+                this.#adjustForNoRegrouping()
+            }
     }
 
     generateAnswerChoices() {
@@ -52,18 +57,15 @@ class Operator {
 
         return answerChoices
     }
+
+    #adjustForNoRegrouping() {
+        console.log('Function meant to be overriden by subclasses')
+    }
 }
 
 class Plus extends Operator {
     generateQuestionString() {
         super.generateQuestionString()
-        // If regrouping is false and both numbers are integers...
-        if (!this.regrouping &&
-            this.leftNum instanceof number.Integer &&
-            this.rightNum instanceof number.Integer) {
-                // Adjust the generated numbers so that no digit requires regrouping.
-                this.#adjustForNoRegrouping()
-        }
 
         return this.leftNum.valueToString() + ' + ' + this.rightNum.valueToString()
     }
@@ -94,18 +96,12 @@ class Plus extends Operator {
 class Minus extends Operator {
     generateQuestionString() {
         super.generateQuestionString()
+
         // Prevent negative answers (may expand to be optional later)
         if (this.leftNum.value < this.rightNum.value) {
             const temp = this.leftNum
             this.leftNum = this.rightNum
             this.rightNum = temp
-        }
-        // If regrouping is false and both numbers are integers...
-        if (!this.regrouping &&
-            this.leftNum instanceof number.Integer
-            && this.rightNum instanceof number.Integer) {
-                // Adjust the generated numbers so that no digit requires regrouping.
-                this.#adjustForNoRegrouping()
         }
         
         return this.leftNum.valueToString() + ' - ' + this.rightNum.valueToString()
@@ -134,13 +130,6 @@ class Minus extends Operator {
 class Times extends Operator {
     generateQuestionString() {
         super.generateQuestionString()
-
-        // If regrouping is false and both numbers are integers...
-        if (!this.regrouping &&
-            this.leftNumType instanceof number.Integer &&
-            this.rightNumType instanceof number.Integer) {
-                this.#adjustFoRegrouping()
-        }
 
         return this.leftNum.valueToString() + ' x ' + this.rightNum.valueToString()
     }
