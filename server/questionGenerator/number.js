@@ -1,4 +1,3 @@
-const { number } = require('mathjs')
 const math = require('mathjs')
 
 const SIGN = {
@@ -35,6 +34,21 @@ class Integer extends Number {
         const max = parseInt(Array(this.digits).fill(9).join(''))
         const min = parseInt(1 + Array(this.digits - 1).fill(0).join(''))
         this.value = Math.floor(Math.random() * (max - min) + min) * (this.sign === SIGN.POSITIVE ? 1 : -1)
+        return this.value
+    }
+}
+
+class Decimal extends Integer {
+    decimalPlaces
+
+    constructor(sign, digits, decimalPlaces) {
+        super(sign, digits)
+        this.decimalPlaces = decimalPlaces
+    }
+
+    generateNewValue() {
+        super.generateNewValue()
+        this.value = this.value / 10 ** this.decimalPlaces
         return this.value
     }
 }
@@ -79,4 +93,4 @@ class Fraction extends Number {
     }
 }
 
-module.exports = { Number: Number, Integer: Integer, Fraction: Fraction }
+module.exports = { Number: Number, Integer: Integer, Decimal: Decimal, Fraction: Fraction }
