@@ -20,10 +20,13 @@ class Operator {
         this.rightNum.generateNewValue()
 
         // If regrouping is false and both numbers are integers...
-        if (!this.regrouping &&
-            this.leftNum instanceof number.Integer &&
-            this.rightNum instanceof number.Integer) {
-                this.#adjustForNoRegrouping()
+        const numbersAreRegroupable =
+            (this.leftNum instanceof number.Integer ||
+            this.leftNum instanceof number.Decimal) &&
+            (this.rightNum instanceof number.Integer ||
+            this.rightNum instanceof number.Decimal)
+        if (!this.regrouping && numbersAreRegroupable) {
+                this.adjustForNoRegrouping()
             }
     }
 
@@ -58,7 +61,7 @@ class Operator {
         return answerChoices
     }
 
-    #adjustForNoRegrouping() {
+    adjustForNoRegrouping() {
         console.log('Function meant to be overriden by subclasses')
     }
 }
@@ -70,7 +73,8 @@ class Plus extends Operator {
         return this.leftNum.valueToString() + ' + ' + this.rightNum.valueToString()
     }
 
-    #adjustForNoRegrouping() {
+    adjustForNoRegrouping() {
+        console.log('original:', this.leftNum.value, '+', this.rightNum.value)
         // Convert numbers to string and pad with 0 to make indexing easier.
         const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
         const leftNumValue = this.leftNum.value.toString().padStart(maxDigits, 0)
@@ -81,6 +85,7 @@ class Plus extends Operator {
             const digitOfRight = parseInt(rightNumValue[i])
             // If the sum of the given place value is greater than 10...
             if (digitOfLeft + digitOfRight > 9) {
+                console.log('digitOfLeft:', digitOfLeft, 'digitOfRight:', digitOfRight)
                 const amountOverNine = digitOfLeft + digitOfRight - 9
                 // Subtract the amount-over-nine from the given digit from either number.
                 if (Math.round(Math.random() * 1)) {
@@ -95,33 +100,35 @@ class Plus extends Operator {
 
 class Minus extends Operator {
     generateQuestionString() {
-        super.generateQuestionString()
-
         // Prevent negative answers (may expand to be optional later)
         if (this.leftNum.value < this.rightNum.value) {
             const temp = this.leftNum
             this.leftNum = this.rightNum
             this.rightNum = temp
         }
+
+        super.generateQuestionString()
         
         return this.leftNum.valueToString() + ' - ' + this.rightNum.valueToString()
     }
 
-    #adjustForNoRegrouping() {
+    adjustForNoRegrouping() {
+        console.log('original:', this.leftNum.value, '-', this.rightNum.value)
         // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
         const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
-        const leftNumValue = this.leftNum.toString().padStart(maxDigits, 0).split('')
-        const rightNumValue = this.rightNum.toString().padStart(maxDigits, 0).split('')
+        const leftNumValue = this.leftNum.value.toString().padStart(maxDigits, 0).split('')
+        const rightNumValue = this.rightNum.value.toString().padStart(maxDigits, 0).split('')
         for (let i = maxDigits - 1; i >= 0; i--) {
             const digitOfLeft = parseInt(leftNumValue[i])
             const digitOfRight = parseInt(rightNumValue[i])
             // If the difference of the given place value is less than 0...
             if (digitOfLeft - digitOfRight < 0) {
+                console.log('digitOfLeft:', digitOfLeft, 'digitOfRight:', digitOfRight)
                 // Switch the digits so the greater number is in leftNum.
                 leftNumValue[i] = digitOfRight
                 rightNumValue[i] = digitOfLeft
-                this.leftNum = parseInt(leftNum.join(''))
-                this.rightNum = parseInt(rightNum.join(''))
+                this.leftNum.value = parseInt(leftNumValue.join(''))
+                this.rightNum.value = parseInt(rightNumValue.join(''))
             }
         }
     }
@@ -134,10 +141,10 @@ class Times extends Operator {
         return this.leftNum.valueToString() + ' x ' + this.rightNum.valueToString()
     }
 
-    #adjustFoRegrouping() {
+    adjustForNoRegrouping() {
         // Convert numbers to array of digits to make indexing easier.
-        const leftNumValue = this.leftNum.toString().split('')
-        const rightNumValue = this.rightNum.toString().split('')
+        const leftNumValue = this.leftNum.value.toString().split('')
+        const rightNumValue = this.rightNum.value.toString().split('')
         // For every digit in the right number starting from the one's digit...
         for (let i = rightNumValue.length - 1; i >= 0; i--) {
             const digitOfRight = rightNumValue[i]
@@ -155,8 +162,8 @@ class Times extends Operator {
                 }
             }
         }
-        this.leftNum = leftNumValue.join('')
-        this.rightNum = rightNumValue.join('')
+        this.leftNum.value = parseInt(leftNumValue.join(''))
+        this.rightNum.value = parseInt(rightNumValue.join(''))
     }
 }
 
@@ -179,5 +186,10 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
+
+const dec1 = new number.Integer('positive', 2, 1)
+const dec2 = new number.Integer('positive', 2, 1)
+const plus = new Times(dec1, dec2, false)
+console.log(plus.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
