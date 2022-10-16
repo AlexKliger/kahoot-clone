@@ -1,6 +1,15 @@
 const math = require('mathjs')
 const number = require('./number')
 
+function roundAccurately(number, decimalPlaces) {
+    /*
+    JS lacks floating point precision and resultes in floating errors. This made parsing
+    decimal place digits difficult. I found this solution that accurately rounds to the
+    neares given decimal place.
+    */
+    return Number(Math.round(number + `e${decimalPlaces}`) + `e-${decimalPlaces}`)
+}
+
 // Operators
 class Operator {
     regrouping
@@ -128,21 +137,24 @@ class Minus extends Operator {
         let valueR = this.rightNum.value
         let digitL, digitR;
         for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
-            digitL = Math.floor(valueL / 10**i)
-            valueL -= digitL * 10**i
-            digitR = Math.floor(valueR / 10**i)
-            valueR -= digitR * 10**i
-            console.log(`   digitL: ${digitL}  digitR: ${digitR} in ${10**i}'s place`)
+            
+            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlaces))
+            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlaces)
+
+            digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlaces))
+            valueR = roundAccurately(valueR - digitR * 10**i, decimalPlaces)
+
+            console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
             if (digitL >= digitR) continue
             console.log('       digitL < digitR')
             const offset = Math.floor(Math.random() * 10)
             while (digitL < digitR + offset) {
                 const coinFlip = Math.round(Math.random())
                 if (coinFlip && digitL < 9) {
-                    this.leftNum.value += 10**i
+                    this.leftNum.value = roundAccurately(this.leftNum.value + 10**i, decimalPlaces)
                     digitL++
                 } else {
-                    this.rightNum.value -= 10**i
+                    this.rightNum.value = roundAccurately(this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
                 console.log('       digitL:', digitL, 'digitR:', digitR)
@@ -226,8 +238,8 @@ class DivideBy extends Operator {
     }
 }
 
-const num1 = new number.Decimal('positive', 2, 1)
-const num2 = new number.Decimal('positive', 2, 1)
+const num1 = new number.Decimal('positive', 3, 2)
+const num2 = new number.Decimal('positive', 3, 2)
 const plus = new Minus(num1, num2, false)
 console.log(plus.generateQuestionString())
 
