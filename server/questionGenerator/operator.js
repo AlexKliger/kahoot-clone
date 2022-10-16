@@ -89,6 +89,7 @@ class Plus extends Operator {
             console.log(`   digitL: ${digitL}  digitR: ${digitR} in ${10**i}'s place`)
 
             if (digitL + digitR < 10) continue
+            const offset = Math.floor(Math.random() * 10)
             while (digitL + digitR + Math.floor(Math.random() * 10) >= 10) {
                 const coinFlip = Math.round(Math.random())
                 if (coinFlip && digitL > 0) {
@@ -119,6 +120,38 @@ class Minus extends Operator {
     }
 
     adjustForNoRegrouping() {
+        console.log('adjustForNoRegrouping')
+        console.log('   leftNum:', this.leftNum.value, 'rightNum:', this.rightNum.value)
+        const numWithMostDigits = this.leftNum.digits > this.rightNum.digits ? this.leftNum : this.rightNum
+        const decimalPlaces = numWithMostDigits.decimalPlaces || 0
+        let valueL = this.leftNum.value
+        let valueR = this.rightNum.value
+        let digitL, digitR;
+        for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
+            digitL = Math.floor(valueL / 10**i)
+            valueL -= digitL * 10**i
+            digitR = Math.floor(valueR / 10**i)
+            valueR -= digitR * 10**i
+            console.log(`   digitL: ${digitL}  digitR: ${digitR} in ${10**i}'s place`)
+            if (digitL >= digitR) continue
+            console.log('       digitL < digitR')
+            const offset = Math.floor(Math.random() * 10)
+            while (digitL < digitR + offset) {
+                const coinFlip = Math.round(Math.random())
+                if (coinFlip && digitL < 9) {
+                    this.leftNum.value += 10**i
+                    digitL++
+                } else {
+                    this.rightNum.value -= 10**i
+                    digitR--
+                }
+                console.log('       digitL:', digitL, 'digitR:', digitR)
+            }
+        }
+
+    }
+
+    adjustForNoRegrouping2() {
         console.log('original:', this.leftNum.value, '-', this.rightNum.value)
         // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
         const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
@@ -193,9 +226,9 @@ class DivideBy extends Operator {
     }
 }
 
-const dec1 = new number.Decimal('positive', 1, 1)
-const dec2 = new number.Decimal('positive', 1, 1)
-const plus = new Plus(dec1, dec2, false)
+const num1 = new number.Decimal('positive', 2, 1)
+const num2 = new number.Decimal('positive', 2, 1)
+const plus = new Minus(num1, num2, false)
 console.log(plus.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
