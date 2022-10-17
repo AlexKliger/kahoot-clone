@@ -1,3 +1,4 @@
+const { round } = require('mathjs')
 const math = require('mathjs')
 const number = require('./number')
 
@@ -90,22 +91,27 @@ class Plus extends Operator {
         let valueL = this.leftNum.value
         let valueR = this.rightNum.value
         let digitL, digitR;
+        // For each digit, starting at the farthest right...
         for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
-            digitL = Math.round(valueL / 10**i)
-            valueL -= digitL * 10**i
-            digitR = Math.round(valueR / 10**i)
-            valueR -= digitR * 10**i
+            // Parse left digit
+            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlaces))
+            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlaces)
+            // Parse right digit
+            digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlaces))
+            valueR = roundAccurately(valueR - digitR * 10**i, decimalPlaces)
             console.log(`   digitL: ${digitL}  digitR: ${digitR} in ${10**i}'s place`)
 
+            // If the sum of the digits is less then 10 then nothing needs to be adjusted.
             if (digitL + digitR < 10) continue
-            const offset = Math.floor(Math.random() * 10)
-            while (digitL + digitR + Math.floor(Math.random() * 10) >= 10) {
+            // Randomly adjust either digit until their sum is less than 10 by a random amount between 1 and 9
+            const offset = Math.floor(Math.random() * 5)
+            while (digitL + digitR + offset >= 10) {
                 const coinFlip = Math.round(Math.random())
                 if (coinFlip && digitL > 0) {
-                    this.leftNum.value -= 10**i
+                    this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlaces)
                     digitL--
                 } else {
-                    this.rightNum.value -= 10**i
+                    this.rightNum.value = roundAccurately(this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
                 console.log('       ', digitL, '+', digitR, '=', digitL + digitR)
@@ -136,17 +142,20 @@ class Minus extends Operator {
         let valueL = this.leftNum.value
         let valueR = this.rightNum.value
         let digitL, digitR;
+        // For each digit, starting at the farthest right...
         for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
-            
+            // Parse left digit
             digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlaces))
             valueL = roundAccurately(valueL - digitL * 10**i, decimalPlaces)
-
+            // Parse right digit
             digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlaces))
             valueR = roundAccurately(valueR - digitR * 10**i, decimalPlaces)
 
             console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
+            // If the left digit is greater than the right digit, nothing needs to be done
             if (digitL >= digitR) continue
             console.log('       digitL < digitR')
+            // Randomly increment either the left or right digit until the left digit is greater than the right digit buy a random offset.
             const offset = Math.floor(Math.random() * 10)
             while (digitL < digitR + offset) {
                 const coinFlip = Math.round(Math.random())
@@ -158,28 +167,6 @@ class Minus extends Operator {
                     digitR--
                 }
                 console.log('       digitL:', digitL, 'digitR:', digitR)
-            }
-        }
-
-    }
-
-    adjustForNoRegrouping2() {
-        console.log('original:', this.leftNum.value, '-', this.rightNum.value)
-        // Convert numbers to string, pad with 0, then conver to array of digits to make indexing easier.
-        const maxDigits = Math.max(this.leftNum.digits, this.rightNum.digits)
-        const leftNumValue = this.leftNum.value.toString().padStart(maxDigits, 0).split('')
-        const rightNumValue = this.rightNum.value.toString().padStart(maxDigits, 0).split('')
-        for (let i = maxDigits - 1; i >= 0; i--) {
-            const digitOfLeft = parseInt(leftNumValue[i])
-            const digitOfRight = parseInt(rightNumValue[i])
-            // If the difference of the given place value is less than 0...
-            if (digitOfLeft - digitOfRight < 0) {
-                console.log('digitOfLeft:', digitOfLeft, 'digitOfRight:', digitOfRight)
-                // Switch the digits so the greater number is in leftNum.
-                leftNumValue[i] = digitOfRight
-                rightNumValue[i] = digitOfLeft
-                this.leftNum.value = parseInt(leftNumValue.join(''))
-                this.rightNum.value = parseInt(rightNumValue.join(''))
             }
         }
     }
@@ -238,9 +225,9 @@ class DivideBy extends Operator {
     }
 }
 
-const num1 = new number.Decimal('positive', 3, 2)
-const num2 = new number.Decimal('positive', 3, 2)
-const plus = new Minus(num1, num2, false)
+const num1 = new number.Decimal('positive', 4, 2)
+const num2 = new number.Decimal('positive', 4, 2)
+const plus = new Plus(num1, num2, false)
 console.log(plus.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
