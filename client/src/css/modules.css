@@ -38,6 +38,12 @@
         width: 100%;
     }
 
+.header {
+    padding: 0.5rem 0;
+    text-align: center;
+    background-color: blue;
+    color: white;
+}
 
 .host-controls {
     margin: 1.5rem 0;

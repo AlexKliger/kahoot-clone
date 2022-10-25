@@ -6,6 +6,7 @@ import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
 import CreateGamePage from './components/CreateGamePage'
 import Game from './components/Game'
+import Header from './components/Header'
 import LandingPage from './components/LandingPage'
 // CSS import
 import './css/app.css';
@@ -17,6 +18,7 @@ import './css/themes.css'
 function App() {
   const [playerId] = useState(localStorage.getItem('playerId'))
   const [game, setGame] = useState()
+  const [games, setGames] = useState()
   const [socket, setSocket] = useState()
 
   const navigate = useNavigate()
@@ -51,6 +53,8 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
+
       <Routes>
         <Route
           path="/"
