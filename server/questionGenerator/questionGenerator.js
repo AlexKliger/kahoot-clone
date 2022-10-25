@@ -4,7 +4,8 @@ const operators = require('./operator')
 
 const NUMBER_TYPE = {
     INTEGER: 'integer',
-    FRACTION: 'fraction'
+    FRACTION: 'fraction',
+    DECIMAL: 'decimal'
 }
 
 const OPERATOR = {
@@ -28,12 +29,19 @@ class QuestionGenerator {
                     leftNumConfig.sign,
                     leftNumConfig.digits)
                 break
+            case NUMBER_TYPE.DECIMAL:
+                this.leftNum = new numbers.Decimal(
+                    leftNumConfig.sign,
+                    leftNumConfig.digits,
+                    leftNumConfig.decimalPlaces)
+                break
             case NUMBER_TYPE.FRACTION:
                 this.leftNum = new numbers.Fraction(
                     leftNumConfig.sign,
                     leftNumConfig.digitsInNum,
                     leftNumConfig.digitsInDen)
                 break
+
         }
         // Route the left number type to appropriate class constructor
         switch (rightNumConfig.type) {
@@ -41,6 +49,12 @@ class QuestionGenerator {
                 this.rightNum = new numbers.Integer(
                     rightNumConfig.sign,
                     rightNumConfig.digits)
+                break
+            case NUMBER_TYPE.DECIMAL:
+                this.rightNum = new numbers.Decimal(
+                    rightNumConfig.sign,
+                    rightNumConfig.digits,
+                    rightNumConfig.decimalPlaces)
                 break
             case NUMBER_TYPE.FRACTION:
                 this.rightNum = new numbers.Fraction(
