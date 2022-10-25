@@ -3,7 +3,8 @@ import Checkbox from './Checkbox'
 
 const NUMBER = {
     INTEGER: 'integer',
-    FRACTION: 'fraction'
+    FRACTION: 'fraction',
+    DECIMAL: 'decimal'
 }
 
 const NumberForm = ({ number, setNumber, label }) => {
@@ -27,7 +28,7 @@ const NumberForm = ({ number, setNumber, label }) => {
             </label>
 
             <div className="number-form__options">
-                {number.type === NUMBER.INTEGER &&
+                {(number.type === NUMBER.INTEGER || number.type === NUMBER.DECIMAL) &&
                 <>
                     <label>
                         Digits
@@ -37,6 +38,21 @@ const NumberForm = ({ number, setNumber, label }) => {
                         value={number.digits}
                         onChange={e => {
                             setNumber({...number, digits: parseInt(e.target.value)})
+                        }}
+                    ></input>
+                </>
+                }
+
+                {number.type === NUMBER.DECIMAL &&
+                <>
+                    <label>
+                        Decimal places
+                    </label>
+                    <input
+                        type="number"
+                        value={number.decimalPlaces}
+                        onChange={e => {
+                            setNumber({...number, decimalPlaces: parseInt(e.target.value)})
                         }}
                     ></input>
                 </>
