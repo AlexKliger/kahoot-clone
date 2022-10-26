@@ -1,22 +1,20 @@
-const ws = require('ws')
+const socket = require("socket.io")
 
-let wsServer
+let io
 
 module.exports = {
-    initSocketServer: (server) => {
-        // Start websocket server with http server and cache.
-        wsServer = new ws.WebSocketServer({server: server})
-        wsServer.on('connection', (ws, req) => {
-            console.log('connection made with socket:', req.socket.remoteAddress)
-            ws.on('message', (message) => {
-                console.log('message received:', message)
+    initSocketServer: (httpServer) => {
+        io = new socket.Server(httpServer)
+        io.on("connection", (socket) => {
+            console.log('user connected to socket')
+            socket.on('disconnect', () => {
+                console.log('user disconnected from socket')
             })
         })
-    
-        return wsServer
+
+        return io
     },
     getSocketServer: () => {
-        // Return previously cached server.
-        return wsServer
+        return io
     }
 }

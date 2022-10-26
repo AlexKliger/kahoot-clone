@@ -1,26 +1,8 @@
 const Game = require('../models/Game')
-const sockets = require('../webSocketServer')
+const socketServer = require('../webSocketServer')
 const QuestionGenerator = require('../questionGenerator/questionGenerator')
 
-let socketServer = sockets.getSocketServer()
-
-const questions = [
-    {
-        question: '1 + 1',
-        choices: [0, 1, 2, 3],
-        answer: 2
-    },
-    {
-        question: '2 + 2',
-        choices: [2, 3, 4, 5],
-        answer: 2
-    },
-    {
-        question: '3 - 5',
-        choices: [-2, -1, 0, 1],
-        answer: 0
-    }
-]
+let io = socketServer.getSocketServer()
 
 module.exports = {
     create: async (req, res) => {
@@ -53,8 +35,8 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.addPlayer(req.body.playerId, req.body.playerName)
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = socketServer.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -65,8 +47,8 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.removePlayer(req.body.playerId)
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = socketServer.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -77,8 +59,8 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             await game.start()
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = socketServer.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)   
@@ -89,8 +71,8 @@ module.exports = {
         try {
             const game = await Game.findOne({gameId: req.body.gameId})
             await game.reset()
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = socketServer.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)

@@ -2,6 +2,7 @@
 import { useCallback, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { uid } from 'uid'
+import { io } from 'socket.io-client'
 import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
 import CreateGamePage from './components/CreateGamePage'
@@ -18,24 +19,18 @@ import './css/themes.css'
 function App() {
   const [playerId] = useState(localStorage.getItem('playerId'))
   const [game, setGame] = useState()
-  const [games, setGames] = useState()
   const [socket, setSocket] = useState()
 
   const navigate = useNavigate()
 
   const handleJoinGame = useCallback(async (playerName) => {
     setGame(await joinGame(playerId, playerName, 1))
+    
+    setSocket(io)
+    
     navigate('/game/play', { replace: true })
 
-    const mySocket = new WebSocket('ws://localhost:5000')
-    mySocket.addEventListener('open', () => {
-      console.log('connection opened to websocket:', mySocket.url)
-    })
-    mySocket.addEventListener('message', e => {
-      setGame(JSON.parse(e.data))
-    })
-
-    setSocket(mySocket)
+    setSocket(socket)
   }, [navigate, playerId])
 
   const handleLeaveGame = useCallback(async () => {

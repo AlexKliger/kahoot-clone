@@ -1,7 +1,7 @@
 const Game = require('../models/Game')
 const sockets = require('../webSocketServer')
 
-let socketServer = sockets.getSocketServer()
+let io = sockets.getSocketServer()
 
 module.exports = {
     next: async (req, res) => {
@@ -9,8 +9,8 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.nextQuestion()
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = sockets.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -21,8 +21,8 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.prevQuestion()
-            socketServer = sockets.getSocketServer()
-            socketServer.clients.forEach(client => client.send(JSON.stringify(game)))
+            io = sockets.getSocketServer()
+            io.sockets.emit(JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -37,9 +37,6 @@ module.exports = {
             await Game.findOneAndUpdate(
                 { gameId: req.body.gameId },
                 { submittedAnswers: submittedAnswers })
-            // game.set({ submittedAnswers: submittedAnswers })
-            // game.submittedAnswers[game.currentQuestion][req.body.playerId] = req.body.answer
-            // await game.save()
             res.json({message: 'answer submitted'})
         } catch (err) {
             console.log(err)
