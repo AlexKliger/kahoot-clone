@@ -10,6 +10,11 @@ module.exports = {
             socket.on('disconnect', () => {
                 console.log('user disconnected from socket')
             })
+
+            socket.on('join room', (room) => {
+                console.log('user joined room', room)
+                socket.join(room)
+            })
         })
 
         return io

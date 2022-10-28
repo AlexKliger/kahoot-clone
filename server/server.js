@@ -5,7 +5,6 @@ const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const WebSocket = require('ws')
 // Route imports
 const authRoutes = require('./routes/auth')
 const gameRoutes = require('./routes/game')

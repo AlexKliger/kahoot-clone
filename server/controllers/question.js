@@ -9,20 +9,22 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.nextQuestion()
+            console.log('   gameId:', req.body.gameId)
             io = sockets.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
         }
     },
     previous: async (req, res) => {
-        console.log('/game/questions/next requested')
+        console.log('/game/questions/previous requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.prevQuestion()
+            console.log('   gameId:', req.body.gameId)
             io = sockets.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)

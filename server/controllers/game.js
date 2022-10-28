@@ -1,4 +1,5 @@
 const Game = require('../models/Game')
+const { uid } = require('uid')
 const socketServer = require('../webSocketServer')
 const QuestionGenerator = require('../questionGenerator/questionGenerator')
 
@@ -19,7 +20,7 @@ module.exports = {
             await Game.findOneAndDelete({ gameId: 1 })
             const game = await Game.create(
                 {
-                    gameId: 1,
+                    gameId: uid(4),
                     questions: questions,
                     host: req.body.hostId
                 })
@@ -36,7 +37,9 @@ module.exports = {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.addPlayer(req.body.playerId, req.body.playerName)
             io = socketServer.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            console.log('   gameId:', req.body.gameId)
+
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -48,7 +51,8 @@ module.exports = {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.removePlayer(req.body.playerId)
             io = socketServer.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            console.log('   gameId:', req.body.gameId)
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
@@ -60,7 +64,8 @@ module.exports = {
             const game = await Game.findOne({ gameId: req.body.gameId })
             await game.start()
             io = socketServer.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            console.log('   gameId:', req.body.gameId)
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)   
@@ -71,8 +76,9 @@ module.exports = {
         try {
             const game = await Game.findOne({gameId: req.body.gameId})
             await game.reset()
+            console.log('   gameId:', req.body.gameId)
             io = socketServer.getSocketServer()
-            io.sockets.emit(JSON.stringify(game))
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
