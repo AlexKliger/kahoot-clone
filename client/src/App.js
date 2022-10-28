@@ -25,7 +25,7 @@ function App() {
 
   const handleJoinGame = useCallback(async (playerName, gameId) => {
     setGame(await joinGame(playerId, playerName, gameId))
-    
+
     navigate('/game/play', { replace: true })
 
     const socket = io()
@@ -44,8 +44,9 @@ function App() {
   }, [navigate, playerId, socket, game])
 
   const handleCreateGame = useCallback(async (leftNumConfig, rightNumConfig, operatorConfig) => {
-    setGame(await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig))
-    handleJoinGame('host', game.gameId)
+    const newGame = await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig)
+    setGame(newGame)
+    handleJoinGame('host', newGame.gameId)
     navigate('/game/play', { replace: true })
   }, [handleJoinGame, navigate, playerId, game])
 
