@@ -18,7 +18,7 @@ const GameScreen = ({ game, setGame, playerId }) => {
                 ))}   
             </ul>
 
-            {game.host === playerId && 
+            {game.hostId === playerId && 
             <div className="host-controls">
                 <button className="host-controls__prev-button" onClick={async () => setGame(await prevQuestion(game.gameId))}>Prev</button>
                 <button className="host-controls__next-button" onClick={async () => setGame(await nextQuestion(game.gameId))}>Next</button>

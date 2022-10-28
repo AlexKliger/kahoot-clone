@@ -12,7 +12,7 @@ const WaitingRoom = ({ game, setGame, playerId }) => {
         <section className="game__waiting-room">
         <h2 className="font-size--extra-large">Waiting for players...</h2>
         <Players players={game.players} />
-        {game.host === playerId &&
+        {game.hostId === playerId &&
         <>
             {game.state === GAME_STATE.WAITING_FOR_PLAYERS ? 
             <button onClick={ async () => setGame(await startGame(game.gameId)) }>
