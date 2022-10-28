@@ -17,12 +17,12 @@ module.exports = {
             for (let i = 0; i < 10; i++) {
                 questions.push(questionGenerator.generateQuestionObject())
             }
-            await Game.findOneAndDelete({ gameId: 1 })
+            await Game.findOneAndDelete({ gameId: req.body.gameId })
             const game = await Game.create(
                 {
                     gameId: uid(4),
                     questions: questions,
-                    host: req.body.hostId
+                    hostId: req.body.hostId
                 })
             questions.forEach(() => game.submittedAnswers.push({}))
             await game.save()
@@ -49,11 +49,17 @@ module.exports = {
         console.log('/game/leave requested')
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
-            game && game.removePlayer(req.body.playerId)
-            io = socketServer.getSocketServer()
-            console.log('   gameId:', req.body.gameId)
-            io.to(req.body.gameId).emit('data', JSON.stringify(game))
-            res.json(game)
+            // If the host leaves, delete the game.
+            if (req.body.playerId === game.hostId) {
+                await game.delete()
+                res.json({message: 'game deleted'})
+            } else {
+                game && game.removePlayer(req.body.playerId)
+                io = socketServer.getSocketServer()
+                console.log('   gameId:', req.body.gameId)
+                io.to(req.body.gameId).emit('data', JSON.stringify(game))
+                res.json(game)
+            }
         } catch (err) {
             console.log(err)
         }

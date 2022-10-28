@@ -79,7 +79,7 @@ const GameSchema = new mongoose.Schema({
         type: [PlayerSchema],
         default: []
     },
-    host: {
+    hostId: {
         type: String,
         required: true
     },
@@ -95,7 +95,9 @@ const GameSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    submittedAnswers: [{}],
+    submittedAnswers: [{
+        
+    }],
     gameId: {
         type: String,
         default: uid(4)
