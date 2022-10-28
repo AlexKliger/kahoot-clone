@@ -23,28 +23,31 @@ function App() {
 
   const navigate = useNavigate()
 
-  const handleJoinGame = useCallback(async (playerName) => {
-    setGame(await joinGame(playerId, playerName, 1))
-    
-    setSocket(io)
+  const handleJoinGame = useCallback(async (playerName, gameId) => {
+    setGame(await joinGame(playerId, playerName, gameId))
     
     navigate('/game/play', { replace: true })
+
+    const socket = io()
+    socket.on('connect', () => console.log('connected to socket'))
+    socket.on('data', (data) => setGame(JSON.parse(data)))    
+    socket.emit('join room', gameId)
 
     setSocket(socket)
   }, [navigate, playerId])
 
   const handleLeaveGame = useCallback(async () => {
-    setGame(await leaveGame(playerId, 1))
+    setGame(await leaveGame(playerId, game.gameId))
     navigate('/', { replace: true })
     socket.close()
     setSocket(null)
-  }, [navigate, playerId, socket])
+  }, [navigate, playerId, socket, game])
 
   const handleCreateGame = useCallback(async (leftNumConfig, rightNumConfig, operatorConfig) => {
     setGame(await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig))
-    handleJoinGame('host')
+    handleJoinGame('host', game.gameId)
     navigate('/game/play', { replace: true })
-  }, [handleJoinGame, navigate, playerId])
+  }, [handleJoinGame, navigate, playerId, game])
 
   return (
     <div className="App">
