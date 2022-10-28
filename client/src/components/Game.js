@@ -10,6 +10,8 @@ const GAME_STATE = {
 const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
     return (
         <section className="game flex-centered margin-centered">
+            <span>Game ID: {game.gameId}</span>
+
             {(game.state === GAME_STATE.WAITING_FOR_PLAYERS ||
             game.state === GAME_STATE.GAME_ENDED) &&
             <WaitingRoom game={game} setGame={setGame} playerId={playerId} />
