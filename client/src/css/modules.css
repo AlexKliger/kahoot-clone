@@ -1,30 +1,22 @@
 .answer-choices {
-    width: 90%;
-    gap: 1rem;
-    padding: 0 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 90%;
 }
 
     .answer-choices__choice {
         width: 100%;
-        padding: 3rem 0;
+        padding: 5rem 0;
+        border-radius: 5px;
     }
 
-.game {
-    text-align: center;
+.game-screen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-    .game__screen {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .game__waiting-room {
-        width: 100%;
-    }
 
 .header {
     padding: 1rem 0;
@@ -97,15 +89,18 @@
     }
 
 .page {
-    max-width: 600px;
+    width: 600px;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: white;
-
 }
+
+    .page--game {
+        text-align: center;
+    }
 
 .players {
     margin: 1.5rem 0;
@@ -123,3 +118,7 @@
         font-weight: bold;
         margin: 2rem 0;
     }
+
+.waiting-room {
+    width: 100%;
+}

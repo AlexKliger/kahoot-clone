@@ -9,7 +9,7 @@ const GAME_STATE = {
 
 const WaitingRoom = ({ game, setGame, playerId }) => {
     return (
-        <section className="game__waiting-room">
+        <section className="waiting-room">
         <h2 className="font-size--extra-large">Waiting for players...</h2>
         <Players players={game.players} />
         {game.hostId === playerId &&
