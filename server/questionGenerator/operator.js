@@ -180,28 +180,38 @@ class Times extends Operator {
     }
 
     adjustForNoRegrouping() {
-        // Convert numbers to array of digits to make indexing easier.
-        const leftNumValue = this.leftNum.value.toString().split('')
-        const rightNumValue = this.rightNum.value.toString().split('')
-        // For every digit in the right number starting from the one's digit...
-        for (let i = rightNumValue.length - 1; i >= 0; i--) {
-            const digitOfRight = rightNumValue[i]
-            // And for every digit in the left number starting from the one's digit...
-            for (let j = leftNumValue.length - 1; j >= 0; j--) {
-                const digitOfLeft = leftNumValue[j]
-                // If the product of the respective digits is greater than 9...
-                if (digitOfRight * digitOfLeft > 9) {
-                    let amountOverNine = leftNumValue[j] * rightNumValue[i] - 9
-                    while (amountOverNine > 0) {
-                        // Randomly decrement one of the digits.
-                        Math.round(Math.random() * 1) ? rightNumValue[i]-- : leftNumValue[j]--
-                        amountOverNine = leftNumValue[j] * rightNumValue[i] - 9
+        console.log('adjustForNoRegrouping')
+        console.log('   leftNum:', this.leftNum.value, 'rightNum:', this.rightNum.value)
+        const decimalPlacesL = this.leftNum.decimalPlaces || 0
+        const decimalPlacesR = this.rightNum.decimalPlaces || 0
+        let valueL = this.leftNum.value
+        let valueR = this.rightNum.value
+        let digitL, digitR;
+        // Parse digit of left number.
+        for (let i = this.leftNum.digits - decimalPlacesL - 1; i >= -decimalPlacesL; i--) {
+            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlacesL))
+            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlacesL)
+            // Parse digit of right number.
+            for (let j = this.rightNum.digits - decimalPlacesR - 1; j >= -decimalPlacesR; j--) {
+                digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlacesR))
+                valueR = roundAccurately(valueR - digitR * 10**i, decimalPlacesR)
+
+                console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
+                if (digitL * digitR < 10) continue
+                console.log('       digitL * digitR > 10')
+                while (digitL * digitR >= 10) {
+                    const coinFlip = Math.round(Math.random())
+                    if (coinFlip && digitL > 0) {
+                        this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlacesL)
+                        digitL--
+                    } else {
+                        this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlacesR)
+                        digitR--
                     }
+
                 }
             }
         }
-        this.leftNum.value = parseInt(leftNumValue.join(''))
-        this.rightNum.value = parseInt(rightNumValue.join(''))
     }
 }
 
@@ -209,7 +219,7 @@ class DivideBy extends Operator {
     remainderRequired
 
     constructor(leftNum, rightNum, hasRemainder) {
-        super(leftNum, rightNum)
+        super(leftNum, rightNum, true)
         this.remainderRequired = hasRemainder
     }
 
@@ -218,16 +228,12 @@ class DivideBy extends Operator {
         // If remainder is false and both numbers are integers...
         if (!this.remainderRequired && this.leftNum instanceof number.Integer && this.rightNum instanceof number.Integer) {
             // Subtract the remainder from the dividend.
-            const remainder = this.leftNum % this.rightNum
-            this.leftNum -= remainder
+            const remainder = this.leftNum.value % this.rightNum.value
+            this.leftNum.value -= remainder
         }
+        
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
-
-const num1 = new number.Decimal('positive', 4, 2)
-const num2 = new number.Decimal('positive', 4, 2)
-const plus = new Plus(num1, num2, false)
-console.log(plus.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
