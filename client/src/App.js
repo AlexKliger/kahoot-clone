@@ -52,7 +52,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header gameId={game ? game.gameId : ""} />
 
       <Routes>
         <Route
