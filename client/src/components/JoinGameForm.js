@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 
-const JoinGame = ({ handleSubmit }) => {
+const JoinGameForm = ({ handleSubmit }) => {
     const [name, setName] = useState('')
     const [gameId, setGameId] = useState('')
 
@@ -10,24 +10,30 @@ const JoinGame = ({ handleSubmit }) => {
     }, [name, gameId])
 
     return (
-        <form onSubmit={onSubmit}>
+        <form className="join-game-form" onSubmit={onSubmit}>
             <input
+                className="join-game-form__input font-size--medium"
                 type="text"
                 value={name}
-                placeholder="name"
+                placeholder="Name"
                 onChange={e => setName(e.target.value)}
             ></input>
 
             <input
+                className="join-game-form__input font-size--medium"
                 type="text"
                 value={gameId}
-                placeholder="game id"
+                placeholder="Game ID"
                 onChange={e => setGameId(e.target.value)}
             ></input>
 
-            <input type="submit" value="Join Game"></input>
+            <input
+                className="join-game-form__input font-size--medium"
+                type="submit"
+                value="Join Game"
+            ></input>
         </form>
     )
 }
 
-export default JoinGame
+export default JoinGameForm

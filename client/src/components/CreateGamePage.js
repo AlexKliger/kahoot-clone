@@ -31,7 +31,7 @@ const CreateGamePage = ( { handleSubmit }) => {
     }, [leftNum, rightNum, operator, handleSubmit])
 
     return (
-        <section className="create-game-page margin-centered">
+        <section className="page margin-centered">
             <h2 className="font-size--extra-large">Create New Game</h2>        
 
             <form style={{"width": "100%"}} onSubmit={onSubmit}>

@@ -6,7 +6,7 @@ import { io } from 'socket.io-client'
 import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
 import CreateGamePage from './components/CreateGamePage'
-import Game from './components/Game'
+import GamePage from './components/GamePage'
 import Header from './components/Header'
 import LandingPage from './components/LandingPage'
 // CSS import
@@ -51,7 +51,7 @@ function App() {
   }, [handleJoinGame, navigate, playerId, game])
 
   return (
-    <div className="App">
+    <div className="app">
       <Header />
 
       <Routes>
@@ -68,7 +68,7 @@ function App() {
         <Route path="game">
           <Route
             path="play"
-            element={ <Game
+            element={ <GamePage
                         game={ game }
                         setGame={ setGame }
                         handleLeaveGame={ handleLeaveGame }

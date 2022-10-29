@@ -7,9 +7,9 @@ const GAME_STATE = {
     GAME_ENDED: 'game-ended'
 }
 
-const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
+const GamePage = ({ game, handleLeaveGame, setGame, playerId }) => {
     return (
-        <section className="game flex-centered margin-centered">
+        <section className="game page flex-centered margin-centered">
             <span>Game ID: {game.gameId}</span>
 
             {(game.state === GAME_STATE.WAITING_FOR_PLAYERS ||
@@ -26,4 +26,4 @@ const Game = ({ game, handleLeaveGame, setGame, playerId }) => {
     )
 }
 
-export default Game
+export default GamePage
