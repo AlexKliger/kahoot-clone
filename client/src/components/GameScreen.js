@@ -1,5 +1,4 @@
-import Players from './Players'
-import {resetGame, nextQuestion, prevQuestion, submitAnswer } from '../util/api'
+import { submitAnswer } from '../util/api'
 
 const GameScreen = ({ game, setGame, playerId }) => {
     return (
@@ -18,15 +17,6 @@ const GameScreen = ({ game, setGame, playerId }) => {
                 ))}   
             </ul>
 
-            {game.hostId === playerId && 
-            <div className="host-controls">
-                <button className="host-controls__prev-button" onClick={async () => setGame(await prevQuestion(game.gameId))}>Prev</button>
-                <button className="host-controls__next-button" onClick={async () => setGame(await nextQuestion(game.gameId))}>Next</button>
-                <button className="host-controls__reset-button" onClick={ async () => setGame(await resetGame(game.gameId)) }>Reset Game</button>
-            </div>
-            }
-
-            <Players players={game.players} />
         </section>
     )
 }
