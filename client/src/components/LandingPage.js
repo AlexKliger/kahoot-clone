@@ -1,4 +1,3 @@
-import CreateGame from './CreateGame'
 import JoinGame from './JoinGameForm'
 
 const LandingPage = ({ handleJoinGame }) => {    

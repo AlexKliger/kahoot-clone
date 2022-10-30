@@ -11,6 +11,14 @@
         border-radius: 5px;
     }
 
+.create-game-form {
+    width: 100%;
+}
+
+    .create-game-form > * {
+        margin-bottom: 2rem;
+    }
+
 .game-screen {
     width: 100%;
     display: flex;
@@ -59,32 +67,43 @@
 
 .number-form {
     display: flex;
+    gap: 2rem;
+    align-items: center;
 }
 
     .number-form__selector {
-        display: flex;
-        flex-direction: column;
         flex: 1;
     }
+
+        .number-form__selector label {
+            margin-right: 1rem;
+        }
 
     .number-form__options {
         display: flex;
         flex-direction: column;
         flex: 1;
+        gap: 1rem;
     }
 
 .operator-form {
     display: flex;
+    padding: 1rem 0;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
     .operator-form__selector {
-        display: flex;
-        flex-direction: column;
         flex: 1;
     }
 
+        .operator-form__selector label {
+            margin-right: 1rem;
+        }
+
     .operator-form__options {
         align-self: center;
+        flex-direction: column;
         flex: 1;
     }
 

@@ -3,8 +3,8 @@ import Checkbox from './Checkbox'
 
 const NUMBER = {
     INTEGER: 'integer',
-    FRACTION: 'fraction',
-    DECIMAL: 'decimal'
+    DECIMAL: 'decimal',
+    FRACTION: 'fraction'
 }
 
 const NumberForm = ({ number, setNumber, label }) => {
@@ -18,18 +18,25 @@ const NumberForm = ({ number, setNumber, label }) => {
 
     return (
         <section className="number-form">
-            <label className="number-form__selector" htmlFor="left-number">
-                {label}
-                <select value={number.type} name="left-number" id="left-number" onChange={handleSelectionChange}>
-                {Object.values(NUMBER).map((type, key) => (
-                    <option value={type} key={key}>{type}</option>
-                ))}
+            <div className="number-form__selector">
+                <label htmlFor="left-number">
+                    {label}
+                </label>
+                <select
+                    value={number.type}
+                    name="left-number"
+                    id="left-number"
+                    onChange={handleSelectionChange}
+                >
+                    {Object.values(NUMBER).map((type, key) => (
+                        <option value={type} key={key}>{type}</option>
+                    ))}
                 </select>
-            </label>
+            </div>
 
             <div className="number-form__options">
                 {(number.type === NUMBER.INTEGER || number.type === NUMBER.DECIMAL) &&
-                <>
+                <div>
                     <label>
                         Digits
                     </label>
@@ -40,11 +47,11 @@ const NumberForm = ({ number, setNumber, label }) => {
                             setNumber({...number, digits: parseInt(e.target.value)})
                         }}
                     ></input>
-                </>
+                </div>
                 }
 
                 {number.type === NUMBER.DECIMAL &&
-                <>
+                <div>
                     <label>
                         Decimal places
                     </label>
@@ -55,32 +62,37 @@ const NumberForm = ({ number, setNumber, label }) => {
                             setNumber({...number, decimalPlaces: parseInt(e.target.value)})
                         }}
                     ></input>
-                </>
+                </div>
                 }
 
                 {number.type === NUMBER.FRACTION &&
                 <>
-                    <label>
-                        Digits in numerator
-                    </label>
-                    <input
+                    <div>
+                        <label>
+                            Digits in numerator
+                        </label>
+                        <input
                             type="number"
                             value={number.digitsInNum}
                             onChange={e => {
                                 setNumber({...number, digitsInNum: parseInt(e.target.value)})
                             }}
                         ></input>
+                    </div>
 
-                    <label>
-                        Digits in denominator
-                    </label>
-                    <input
-                        type="number"
-                        value={number.digitsInDen}
-                        onChange={e => {
-                            setNumber({...number, digitsInDen: parseInt(e.target.value)})
-                        }}
-                    ></input>
+                    <div>
+                        <label>
+                            Digits in denominator
+                        </label>
+                        <input
+                            type="number"
+                            value={number.digitsInDen}
+                            onChange={e => {
+                                setNumber({...number, digitsInDen: parseInt(e.target.value)})
+                            }}
+                        ></input>                        
+                    </div>
+
                 </>
                 }
 

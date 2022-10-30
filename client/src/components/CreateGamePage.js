@@ -34,7 +34,7 @@ const CreateGamePage = ( { handleSubmit }) => {
         <section className="page margin-centered">
             <h2 className="font-size--extra-large">Create New Game</h2>        
 
-            <form style={{"width": "100%"}} onSubmit={onSubmit}>
+            <form className="create-game-form" onSubmit={onSubmit}>
                 <NumberForm number={leftNum} setNumber={setLeftNum} label={"Left Number"}/>
 
                 <OperatorForm operator={operator} setOperator={setOperator} />
