@@ -1,5 +1,6 @@
 const { round } = require('mathjs')
 const math = require('mathjs')
+const { Integer, Decimal } = require('./number')
 const number = require('./number')
 
 function roundAccurately(number, decimalPlaces) {
@@ -26,8 +27,8 @@ class Operator {
     }
 
     generateQuestionString() {
-        this.leftNum.generateNewValue()
-        this.rightNum.generateNewValue()
+        // this.leftNum.generateNewValue()
+        // this.rightNum.generateNewValue()
 
         // If regrouping is false and both numbers are integers...
         const numbersAreRegroupable =
@@ -91,15 +92,22 @@ class Plus extends Operator {
         let valueL = this.leftNum.value
         let valueR = this.rightNum.value
         let digitL, digitR;
-        // For each digit, starting at the farthest right...
+        // For each digit, starting at the farthest left...
         for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
-            // Parse left digit
-            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlaces))
-            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlaces)
-            // Parse right digit
-            digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlaces))
-            valueR = roundAccurately(valueR - digitR * 10**i, decimalPlaces)
-            console.log(`   digitL: ${digitL}  digitR: ${digitR} in ${10**i}'s place`)
+            // Parse left and right digits
+            if (i >= 0) {
+                digitL = Math.floor(valueL / 10**i)
+                digitR = Math.floor(valueR / 10**i)
+            } else {
+                digitL = Math.floor(math.round(valueL / 10**i, decimalPlaces))
+                digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
+            }
+
+            // Remove place valur for next iteration of loop.
+            console.log(`       digitL: ${digitL} in ${10**i}'s place`)
+            valueL = math.round(valueL - digitL * 10**i, decimalPlaces)
+            console.log(`       digitR: ${digitR} in ${10**i}'s place`)
+            valueR = math.round(valueR - digitR * 10**i, decimalPlaces)
 
             // If the sum of the digits is less then 10 then nothing needs to be adjusted.
             if (digitL + digitR < 10) continue
@@ -235,5 +243,13 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
+
+num1 = new Decimal('positive', 2, 2)
+num1.value = .17
+num2 = new Decimal('positive', 2, 2)
+num2.value = .15
+op = new Plus(num1, num2, false)
+
+console.log(op.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
