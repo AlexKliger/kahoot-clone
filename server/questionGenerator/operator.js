@@ -103,7 +103,7 @@ class Plus extends Operator {
                 digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
             }
 
-            // Remove place valur for next iteration of loop.
+            // Remove place value for next iteration of loop.
             console.log(`       digitL: ${digitL} in ${10**i}'s place`)
             valueL = math.round(valueL - digitL * 10**i, decimalPlaces)
             console.log(`       digitR: ${digitR} in ${10**i}'s place`)
@@ -116,10 +116,10 @@ class Plus extends Operator {
             while (digitL + digitR + offset >= 10) {
                 const coinFlip = Math.round(Math.random())
                 if (coinFlip && digitL > 0) {
-                    this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlaces)
+                    this.leftNum.value = math.round(this.leftNum.value - 10**i, decimalPlaces)
                     digitL--
                 } else {
-                    this.rightNum.value = roundAccurately(this.rightNum.value - 10**i, decimalPlaces)
+                    this.rightNum.value = math.round(this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
                 console.log('       ', digitL, '+', digitR, '=', digitL + digitR)
@@ -152,30 +152,39 @@ class Minus extends Operator {
         let digitL, digitR;
         // For each digit, starting at the farthest right...
         for (let i = numWithMostDigits.digits - decimalPlaces - 1; i >= -decimalPlaces; i--) {
-            // Parse left digit
-            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlaces))
-            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlaces)
-            // Parse right digit
-            digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlaces))
-            valueR = roundAccurately(valueR - digitR * 10**i, decimalPlaces)
+            // Parse left and right digits
+            if (i >= 0) {
+                digitL = Math.floor(valueL / 10**i)
+                digitR = Math.floor(valueR / 10**i)
+            } else {
+                digitL = Math.floor(math.round(valueL / 10**i, decimalPlaces))
+                digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
+            }
 
-            console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
+            // Remove place value for next iteration of loop.
+            console.log(`       digitL: ${digitL} in ${10**i}'s place`)
+            valueL = math.round(valueL - digitL * 10**i, decimalPlaces)
+            console.log(`       digitR: ${digitR} in ${10**i}'s place`)
+            valueR = math.round(valueR - digitR * 10**i, decimalPlaces)
+
             // If the left digit is greater than the right digit, nothing needs to be done
             if (digitL >= digitR) continue
             console.log('       digitL < digitR')
             // Randomly increment either the left or right digit until the left digit is greater than the right digit buy a random offset.
             const offset = Math.floor(Math.random() * 10)
-            while (digitL < digitR + offset) {
+            while (digitL - digitR < offset) {
                 const coinFlip = Math.round(Math.random())
                 if (coinFlip && digitL < 9) {
-                    this.leftNum.value = roundAccurately(this.leftNum.value + 10**i, decimalPlaces)
+                    this.leftNum.value = math.round(this.leftNum.value + 10**i, decimalPlaces)
                     digitL++
-                } else {
-                    this.rightNum.value = roundAccurately(this.rightNum.value - 10**i, decimalPlaces)
+                } else if (!coinFlip && digitR > 0) {
+                    this.rightNum.value = math.round (this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
                 console.log('       digitL:', digitL, 'digitR:', digitR)
             }
+
+
         }
     }
 }
@@ -244,11 +253,11 @@ class DivideBy extends Operator {
     }
 }
 
-num1 = new Decimal('positive', 2, 2)
-num1.value = .17
+num1 = new Decimal('positive', 3, 2)
+num1.value = 3.23
 num2 = new Decimal('positive', 2, 2)
-num2.value = .15
-op = new Plus(num1, num2, false)
+num2.value = .56
+op = new Minus(num1, num2, false)
 
 console.log(op.generateQuestionString())
 
