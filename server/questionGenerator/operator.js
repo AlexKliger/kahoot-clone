@@ -1,22 +1,21 @@
-const { round } = require('mathjs')
+const { norm } = require('mathjs')
 const math = require('mathjs')
-const { Integer, Decimal } = require('./number')
+const { Integer, Decimal, Fraction } = require('./number')
 const number = require('./number')
 
-function roundAccurately(number, decimalPlaces) {
-    /*
-    JS lacks floating point precision and resultes in floating errors. This made parsing
-    decimal place digits difficult. I found this solution that accurately rounds to the
-    neares given decimal place.
-    */
-    return Number(Math.round(number + `e${decimalPlaces}`) + `e-${decimalPlaces}`)
+// Normal distribution using Box-Muller transform
+function normalDistribution() {
+    const u = 1 - Math.random()
+    const v = Math.random()
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
 }
 
 // Operators
 class Operator {
-    regrouping
     leftNum
     rightNum
+    answerType
+    regrouping
     answerIndex
     answerChoiceCount = 4
 
@@ -27,8 +26,8 @@ class Operator {
     }
 
     generateQuestionString() {
-        // this.leftNum.generateNewValue()
-        // this.rightNum.generateNewValue()
+        this.leftNum.generateNewValue()
+        this.rightNum.generateNewValue()
 
         // If regrouping is false and both numbers are integers...
         const numbersAreRegroupable =
@@ -57,11 +56,14 @@ class Operator {
         while (answerChoices.length < this.answerChoiceCount - 1) {
             let wrongAnswer
             if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
-                const offsetNum = Math.round(answer.n * Math.random() * (Math.round(Math.random()) ? -1 : 1))
-                const offsetDen = Math.round(answer.d * Math.random() * (Math.round(Math.random()) ? -1 : 1)) || 1
-                wrongAnswer = math.add(answer, math.fraction(offsetNum, offsetDen))
+                const offsetNum = Math.round(answer.n * normalDistribution())
+                const offsetDen = Math.round(answer.d * normalDistribution())
+                wrongAnswer = math.fraction(answer.n + offsetNum, answer.d + offsetDen || 1)
+            } else if (this.leftNum instanceof number.Decimal || this.rightNum instanceof number.Decimal) {
+                const offset = answer * normalDistribution()
+                wrongAnswer = math.round(answer + offset, 2)
             } else {
-                const offset = Math.round(Math.random() * (answer + 10) * (Math.round(Math.random) ? -1 : 1))
+                const offset = Math.round(answer * normalDistribution())
                 wrongAnswer = answer + offset
             }
             !answerChoices.includes(math.format(wrongAnswer)) && answerChoices.push(math.format(wrongAnswer))
@@ -206,23 +208,33 @@ class Times extends Operator {
         let digitL, digitR;
         // Parse digit of left number.
         for (let i = this.leftNum.digits - decimalPlacesL - 1; i >= -decimalPlacesL; i--) {
-            digitL = Math.floor(roundAccurately(valueL / 10**i, decimalPlacesL))
-            valueL = roundAccurately(valueL - digitL * 10**i, decimalPlacesL)
+            if (i >= 0) {
+                digitL = Math.floor(valueL / 10**i)
+            } else {
+                digitL = Math.floor(math.round(valueL / 10**i, decimalPlaces))
+            }
+            valueL = math.round(valueL - digitL * 10**i, decimalPlacesL)
+            
             // Parse digit of right number.
             for (let j = this.rightNum.digits - decimalPlacesR - 1; j >= -decimalPlacesR; j--) {
-                digitR = Math.floor(roundAccurately(valueR / 10**i, decimalPlacesR))
-                valueR = roundAccurately(valueR - digitR * 10**i, decimalPlacesR)
-
+                // Parse left and right digits
+                if (i >= 0) {
+                    digitR = Math.floor(valueR / 10**i)
+                } else {
+                    digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
+                }
+                valueR = math.round(valueR - digitR * 10**i, decimalPlacesR)
                 console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
+
                 if (digitL * digitR < 10) continue
                 console.log('       digitL * digitR > 10')
                 while (digitL * digitR >= 10) {
                     const coinFlip = Math.round(Math.random())
                     if (coinFlip && digitL > 0) {
-                        this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlacesL)
+                        this.leftNum.value = math.round(this.leftNum.value - 10**i, decimalPlacesL)
                         digitL--
                     } else {
-                        this.leftNum.value = roundAccurately(this.leftNum.value - 10**i, decimalPlacesR)
+                        this.leftNum.value = math.round(this.leftNum.value - 10**i, decimalPlacesR)
                         digitR--
                     }
 
@@ -252,13 +264,5 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
-
-num1 = new Decimal('positive', 3, 2)
-num1.value = 3.23
-num2 = new Decimal('positive', 2, 2)
-num2.value = .56
-op = new Minus(num1, num2, false)
-
-console.log(op.generateQuestionString())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
