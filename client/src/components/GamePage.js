@@ -22,14 +22,17 @@ const GamePage = ({ game, handleLeaveGame, setGame, playerId }) => {
                     {game.state === GAME_STATE.GAME_STARTED &&
                     <GameScreen game={game} setGame={setGame} playerId={playerId} />
                     }
-                    
-                    <HostControls game={game} setGame={setGame} playerId={playerId} />
-
-                    <button style={{"padding": "0.5rem 1rem"}} onClick={ handleLeaveGame }>Leave Game</button>
                 </div>
 
                 <aside className="page--game__container__aside">
+                    {game.state === GAME_STATE.GAME_STARTED &&
+                    <h3 className="font-size--large">Question {game.currentQuestion + 1}/{game.questions.length}</h3>}
+
                     <Players players={game.players} />
+
+                    <HostControls game={game} setGame={setGame} playerId={playerId} />
+
+                    <button style={{"padding": "0.5rem 1rem"}} onClick={ handleLeaveGame }>Leave Game</button>
                 </aside>
             </div>
         </section>   
