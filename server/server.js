@@ -33,7 +33,7 @@ app.use(
 // Route middleware
 app.use('/game', gameRoutes)
 
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
     try {
         res.sendFile(__dirname + '/../client/build/index.html')
     } catch (err) {

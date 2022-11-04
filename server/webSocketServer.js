@@ -1,10 +1,10 @@
-const socket = require("socket.io")
+const socketIO = require("socket.io")
 
 let io
 
 module.exports = {
     initSocketServer: (httpServer) => {
-        io = new socket.Server(httpServer)
+        io = new socketIO.Server(httpServer)
         io.on("connection", (socket) => {
             console.log('user connected to socket')
             socket.on('disconnect', () => {
