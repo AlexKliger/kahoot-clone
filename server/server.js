@@ -1,17 +1,14 @@
 // Package imports
 const express = require('express')
 const cors = require('cors')
-const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 // Route imports
-const authRoutes = require('./routes/auth')
 const gameRoutes = require('./routes/game')
 // Config imports
 const connectDB = require('./config/db')
 const sockets = require('./webSocketServer')
-require('./config/passport')(passport)
 require('dotenv').config({path: './config/.env'})
 
 const app = express()
@@ -30,11 +27,8 @@ app.use(
         store: new MongoStore({mongooseConnection: mongoose.connection})
     })
 )
-app.use(passport.initialize())
-app.use(passport.session())
 
 // Route middleware
-app.use('/auth', authRoutes)
 app.use('/game', gameRoutes)
 
 const PORT = process.env.PORT || 5000
