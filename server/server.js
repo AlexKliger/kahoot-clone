@@ -20,15 +20,6 @@ app.use(express.static(path.join(__dirname, '../client/build')))
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(cors())
-// Authentication middleware
-app.use(
-    session({
-        secret: 'charlie browneyes',
-        resave: false,
-        saveUninitialized: false,
-        store: new MongoStore({mongooseConnection: mongoose.connection})
-    })
-)
 
 // Route middleware
 app.use('/game', gameRoutes)
