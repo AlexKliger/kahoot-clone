@@ -32,8 +32,6 @@ const CreateGamePage = ( { handleSubmit }) => {
 
     return (
         <section className="page margin-centered">
-            <h2 className="font-size--extra-large">Create New Game</h2>        
-
             <form className="create-game-form" onSubmit={onSubmit}>
                 <NumberForm number={leftNum} setNumber={setLeftNum} label={"Left Number"}/>
 
@@ -41,7 +39,7 @@ const CreateGamePage = ( { handleSubmit }) => {
 
                 <NumberForm number={rightNum} setNumber={setRightNum} label={"Right Number"} />
 
-                <input type="submit" value="Create"></input>
+                <input style={{"padding": "0.5rem 1rem"}} className="font-size--medium" type="submit" value="Create"></input>
             </form>
         </section>
     )

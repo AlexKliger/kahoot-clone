@@ -25,6 +25,7 @@ const NumberForm = ({ number, setNumber, label }) => {
                     {label}
                 </label>
                 <select
+                    className="font-size--medium"
                     value={number.type}
                     name="left-number"
                     id="left-number"

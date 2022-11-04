@@ -69,6 +69,8 @@
         border-radius: 4px;
     }
 
+
+
 .number-form {
     display: flex;
     gap: 2rem;
@@ -78,6 +80,9 @@
     .number-form__selector {
         flex: 1;
     }
+        .number-form__selector select {
+            padding: 0.25rem 0.5rem;
+        }
 
         .number-form__selector label {
             margin-right: 1rem;
@@ -90,8 +95,25 @@
         gap: 1rem;
     }
 
+        .number-form__options input {
+            padding: 0.25rem 0.5rem;
+            font-size: var(--font-size--medium);
+            border-radius: 4px;
+        }
+
+        .number-form__options label {
+            margin-bottom: 0.5rem;
+        }
+
+        .number-form__options > div {
+            display: flex;
+            flex-direction: column;
+        }
+
 .operator-form {
     display: flex;
+    gap: 2rem;
+    align-items: center;
     padding: 1rem 0;
     border-top: 1px solid white;
     border-bottom: 1px solid white;
@@ -100,16 +122,22 @@
     .operator-form__selector {
         flex: 1;
     }
+        
+        .operator-form__selector select {
+            padding: 0.25rem 0.5rem;
+        }
 
         .operator-form__selector label {
             margin-right: 1rem;
         }
+
 
     .operator-form__options {
         align-self: center;
         flex-direction: column;
         flex: 1;
     }
+
 
 .page {
     width: 700px;

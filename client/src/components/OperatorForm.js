@@ -14,7 +14,12 @@ const OperatorForm = ({ operator, setOperator }) => {
                 <label htmlFor="operator">
                     Operator
                 </label>
-                <select value={operator.type} name="operator" id="operator" onChange={e => setOperator({...operator, type: e.target.value})}>
+                <select
+                    className="font-size--medium"
+                    value={operator.type}
+                    name="operator"
+                    id="operator"
+                    onChange={e => setOperator({...operator, type: e.target.value})}>
                     {Object.values(OPERATOR).map((type, key) => (
                         <option value={type} key={key}>{type}</option>
                     ))}
