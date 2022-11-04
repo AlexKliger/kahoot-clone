@@ -10,8 +10,10 @@ const NUMBER = {
 const NumberForm = ({ number, setNumber, label }) => {
     const handleSelectionChange = useCallback((e) => {
         let inputs = {type: e.target.value}
-        if (e.target.value === NUMBER.FRACTION) {
-            inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}
+        if (e.target.value === NUMBER.DECIMAL) {
+            inputs = {...inputs, decimalPlaces: 1}
+        } else if (e.target.value === NUMBER.FRACTION) {
+            inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}            
         }
         setNumber({...number, ...inputs})
     })
