@@ -61,7 +61,8 @@ class Operator {
                 wrongAnswer = math.fraction(answer.n + offsetNum, answer.d + offsetDen || 1)
             } else if (this.leftNum instanceof number.Decimal || this.rightNum instanceof number.Decimal) {
                 const offset = answer * normalDistribution()
-                wrongAnswer = math.round(answer + offset, 2)
+                answer = math.round(answer, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
+                wrongAnswer = math.round(answer + offset, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
             } else {
                 const offset = Math.round(answer * normalDistribution())
                 wrongAnswer = answer + offset
