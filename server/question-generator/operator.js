@@ -72,6 +72,7 @@ class Operator {
             answer = math.divide(this.leftNum.value, this.rightNum.value)
         }
         
+        // Generate unique answer choices.
         while (answerChoices.length < this.answerChoiceCount - 1) {
             let wrongAnswer
             if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
@@ -86,9 +87,13 @@ class Operator {
                 const offset = Math.round(answer * normalDistribution())
                 wrongAnswer = answer + offset
             }
-            !answerChoices.includes(math.format(wrongAnswer)) && answerChoices.push(math.format(wrongAnswer))
+
+            if (!answerChoices.includes(math.format(wrongAnswer)) && math.format(wrongAnswer) !== math.format(answer)) {
+                answerChoices.push(math.format(wrongAnswer))
+            }
         }
-        this.answerIndex = Math.floor(Math.random() * 4)
+        // Insert the real answer into a random index.
+        this.answerIndex = Math.floor(Math.random() * this.answerChoiceCount)
         answerChoices.splice(this.answerIndex, 0, math.format(answer))
 
         return answerChoices

@@ -1,7 +1,7 @@
 const Game = require('../models/Game')
 const { uid } = require('uid')
 const socketServer = require('../webSocketServer')
-const QuestionGenerator = require('../questionGenerator/questionGenerator')
+const QuestionGenerator = require('../question-generator/questionGenerator')
 
 let io = socketServer.getSocketServer()
 
