@@ -11,6 +11,10 @@
         border-radius: 5px;
     }
 
+        .answer-choices__choice--selected {
+            background-color: red;
+        }
+
 .create-game-form {
     width: 100%;
 }
