@@ -1,9 +1,11 @@
+import Question from './Question'
 import { submitAnswer } from '../util/api'
 
 const GameScreen = ({ game, setGame, playerId }) => {
   return (
     <section className="game-screen">
-      <span className="question font-size--extra-large">{game.questions[game.currentQuestion].question}</span>
+      <Question question={game.questions[game.currentQuestion].question} />
+
       <ul className="answer-choices">
         {game.questions[game.currentQuestion].choices.map((choice, key) => (
           <li key={key}>
