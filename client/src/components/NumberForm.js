@@ -96,6 +96,10 @@ const NumberForm = ({ number, setNumber, label }) => {
                         ></input>                        
                     </div>
 
+                    <Checkbox
+                        label="Allow improper?"
+                        handleChange={e => setNumber({...number, allowImproper: e.target.value})}
+                    />
                 </>
                 }
 

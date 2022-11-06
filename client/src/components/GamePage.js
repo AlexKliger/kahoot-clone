@@ -9,14 +9,14 @@ const GAME_STATE = {
     GAME_ENDED: 'game-ended'
 }
 
-const GamePage = ({ game, handleLeaveGame, setGame, playerId }) => {
+const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
     return (
         <section className="page page--game margin-centered">
             <div className="page--game__container">
                 <div className="page--game__container__main">
                     {(game.state === GAME_STATE.WAITING_FOR_PLAYERS ||
                     game.state === GAME_STATE.GAME_ENDED) &&
-                    <WaitingRoom game={game} setGame={setGame} playerId={playerId} />
+                    <WaitingRoom />
                     }
 
                     {game.state === GAME_STATE.GAME_STARTED &&
