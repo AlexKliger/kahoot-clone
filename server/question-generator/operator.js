@@ -71,7 +71,7 @@ class Operator {
         } else if (this instanceof DivideBy) {
             answer = math.divide(this.leftNum.value, this.rightNum.value)
         }
-        
+
         // Generate unique answer choices.
         while (answerChoices.length < this.answerChoiceCount - 1) {
             let wrongAnswer
@@ -84,7 +84,7 @@ class Operator {
                 answer = math.round(answer, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
                 wrongAnswer = math.round(answer + offset, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
             } else {
-                const offset = Math.round(answer * normalDistribution())
+                const offset = Math.round((answer + 10) * normalDistribution())
                 wrongAnswer = answer + offset
             }
 
