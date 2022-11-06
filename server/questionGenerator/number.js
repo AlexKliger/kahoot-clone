@@ -1,3 +1,4 @@
+const { all } = require('mathjs')
 const math = require('mathjs')
 
 const SIGN = {
@@ -56,12 +57,13 @@ class Decimal extends Integer {
 class Fraction extends Number {
     digitsInNum
     digitsInDen
-    improper
+    allowImproper
 
-    constructor(sign, digitsInNum, digitsInDen) {
+    constructor(sign, digitsInNum, digitsInDen, allowImproper) {
         super(sign)
         this.digitsInNum = digitsInNum
         this.digitsInDen = digitsInDen
+        this.allowImproper = allowImproper
     }
 
     #generateNumerator() {
@@ -79,14 +81,9 @@ class Fraction extends Number {
     generateNewValue() {
         let numerator = this.#generateNumerator()
         let denominator = this.#generateDenominator()
-        if (this.improper && numerator < denominator) {
-            let temp = numerator
-            numerator = denominator
-            denominator = temp
-        } else if (!this.improper && numerator > denominator) {
-            let temp = numerator
-            numerator = denominator
-            denominator = temp
+        if (numerator > denominator && !this.allowImproper) {
+            // Swap larger numerator for smaller denominator.
+            [numerator, denominator] = [denominator, numerator]
         }
         this.value = math.fraction(numerator * (this.sign === SIGN.POSITIVE ? 1 : -1), denominator)
         return this.value

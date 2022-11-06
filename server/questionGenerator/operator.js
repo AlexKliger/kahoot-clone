@@ -1,4 +1,3 @@
-const { norm } = require('mathjs')
 const math = require('mathjs')
 const { Integer, Decimal, Fraction } = require('./number')
 const number = require('./number')
@@ -14,10 +13,10 @@ function normalDistribution() {
 class Operator {
     leftNum
     rightNum
-    answerType
     regrouping
-    answerIndex
+    allowImproperFractions = false
     answerChoiceCount = 4
+    answerIndex
 
     constructor(leftNum, rightNum, regrouping) {
         this.regrouping = regrouping
@@ -26,10 +25,14 @@ class Operator {
     }
 
     generateQuestionString() {
+        // Set whether fraction objects generate improper fractions.
+        if (this.leftNum instanceof number.Fraction) this.leftNum.allowImproper = this.allowImproperFractions
+        if (this.rightNum instanceof number.Fraction) this.rightNum.allowImproper = this.allowImproperFractions
+
         this.leftNum.generateNewValue()
         this.rightNum.generateNewValue()
 
-        // If regrouping is false and both numbers are integers...
+        // Adjust integers and decimals regrouping is not selected.
         const numbersAreRegroupable =
             (this.leftNum instanceof number.Integer ||
             this.leftNum instanceof number.Decimal) &&
@@ -38,6 +41,22 @@ class Operator {
         if (!this.regrouping && numbersAreRegroupable) {
                 this.adjustForNoRegrouping()
             }
+
+        // Adjust fractions if their sum is improper and impropers are not allowed.
+        if (!this.allowImproperFractions &&
+            this.leftNum instanceof number.Fraction &&
+            this.rightNum instanceof number.Fraction) {
+                let answer = math.add(this.leftNum.value, this.rightNum.value)
+                while (answer.n > answer.d) {
+                    const coinFlip = Math.round(Math.random())
+                    if (coinFlip) {
+                        this.leftNum.value.d++
+                    } else {
+                        this.rightNum.value.d++
+                    }
+                    answer = math.add(this.leftNum.value, this.rightNum.value)
+                }
+        }
     }
 
     generateAnswerChoices() {

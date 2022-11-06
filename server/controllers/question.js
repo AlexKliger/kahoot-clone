@@ -39,7 +39,7 @@ module.exports = {
             await Game.findOneAndUpdate(
                 { gameId: req.body.gameId },
                 { submittedAnswers: submittedAnswers })
-            res.json({message: 'answer submitted'})
+            res.json(game)
         } catch (err) {
             console.log(err)
         }
