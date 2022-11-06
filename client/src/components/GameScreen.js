@@ -1,7 +1,6 @@
 import { submitAnswer } from '../util/api'
 
 const GameScreen = ({ game, setGame, playerId }) => {
-  console.log('GameScreen:', game.submittedAnswers)
   return (
     <section className="game-screen">
       <span className="question font-size--extra-large">{game.questions[game.currentQuestion].question}</span>

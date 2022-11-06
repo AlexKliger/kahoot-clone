@@ -25,7 +25,6 @@ const CreateGamePage = ( { handleSubmit }) => {
     const [operator, setOperator] = useState({type: OPERATOR.PLUS, regrouping: false})
 
     const onSubmit = useCallback(e => {
-        console.log('onSubmit -> leftNum:', leftNum, 'rightNum:', rightNum, 'operator:', operator)
         handleSubmit(leftNum, rightNum, operator)
         e.preventDefault()
     }, [leftNum, rightNum, operator, handleSubmit])
