@@ -22,7 +22,6 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.prevQuestion()
-            console.log('   gameId:', req.body.gameId)
             io = sockets.getSocketServer()
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
@@ -39,6 +38,8 @@ module.exports = {
             await Game.findOneAndUpdate(
                 { gameId: req.body.gameId },
                 { submittedAnswers: submittedAnswers })
+            io = sockets.getSocketServer()
+            io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)
