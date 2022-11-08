@@ -1,4 +1,4 @@
-import Checkbox from './Checkbox'
+import Checkbox from '../core/Checkbox'
 
 const OPERATOR = {
     PLUS: '+',

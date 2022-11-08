@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import Checkbox from './Checkbox'
+import Checkbox from '../core/Checkbox'
 
 const NUMBER = {
     INTEGER: 'integer',

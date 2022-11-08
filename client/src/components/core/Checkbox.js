@@ -1,5 +1,4 @@
 const Checkbox = ({handleChange, label}) => {
-
     return (
       <label>
         {label || ""}

@@ -5,10 +5,10 @@ import { uid } from 'uid'
 import { io } from 'socket.io-client'
 import { createGame, joinGame, leaveGame } from './util/api'
 // Component imports
-import CreateGamePage from './components/CreateGamePage'
-import GamePage from './components/GamePage'
-import Header from './components/Header'
-import LandingPage from './components/LandingPage'
+import CreateGamePage from './components/create-game-page/CreateGamePage'
+import GamePage from './components/game-page/GamePage'
+import Header from './components/core/Header'
+import LandingPage from './components/landing-page/LandingPage'
 // CSS import
 import './css/app.css';
 import './css/modules.css'

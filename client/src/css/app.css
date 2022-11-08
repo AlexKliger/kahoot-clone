@@ -21,3 +21,7 @@ html {
 body {
     background-color: #46178f;
 }
+
+.hidden {
+    display: none;
+}

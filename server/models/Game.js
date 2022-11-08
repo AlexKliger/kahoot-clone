@@ -20,6 +20,7 @@ const methods = {
     reset: async function () {
         this.currentQuestion = 0
         this.players.forEach(player => player.score = 0)
+        this.submittedAnswers = Array(this.questions.length).fill({})
         this.state = GAME_STATE.WAITING_FOR_PLAYERS
         this.save()
         return this

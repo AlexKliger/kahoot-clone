@@ -28,7 +28,11 @@ const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
                     {game.state === GAME_STATE.GAME_STARTED &&
                     <h3 className="font-size--large">Question {game.currentQuestion + 1}/{game.questions.length}</h3>}
 
-                    <Players players={game.players} />
+                    <Players
+                        players={game.players}
+                        submittedAnswers={game.submittedAnswers[game.currentQuestion]}
+                        playerId={playerId}
+                    />
 
                     <HostControls game={game} setGame={setGame} playerId={playerId} />
 

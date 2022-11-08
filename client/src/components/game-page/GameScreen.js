@@ -1,5 +1,5 @@
 import Question from './Question'
-import { submitAnswer } from '../util/api'
+import { submitAnswer } from '../../util/api'
 
 const GameScreen = ({ game, setGame, playerId }) => {
   return (
