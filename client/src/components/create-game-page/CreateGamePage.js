@@ -4,6 +4,7 @@ import OperatorForm from './OperatorForm'
 
 const NUMBER = {
     INTEGER: 'integer',
+    DECIMAL: 'decimal',
     FRACTION: 'fraction'
 }
 
@@ -32,11 +33,24 @@ const CreateGamePage = ( { handleSubmit }) => {
     return (
         <section className="page margin-centered">
             <form className="create-game-form" onSubmit={onSubmit}>
-                <NumberForm number={leftNum} setNumber={setLeftNum} label={"Left Number"}/>
+                <NumberForm
+                    number={leftNum}
+                    setNumber={setLeftNum}
+                    label={"Left Number"}
+                />
 
-                <OperatorForm operator={operator} setOperator={setOperator} />
+                <OperatorForm
+                    operator={operator}
+                    setOperator={setOperator}
+                    leftNumType={leftNum.type}
+                    rightNumType={rightNum.type}
+                />
 
-                <NumberForm number={rightNum} setNumber={setRightNum} label={"Right Number"} />
+                <NumberForm
+                    number={rightNum}
+                    setNumber={setRightNum}
+                    label={"Right Number"}
+                />
 
                 <input style={{"padding": "0.5rem 1rem"}} className="font-size--medium" type="submit" value="Create"></input>
             </form>

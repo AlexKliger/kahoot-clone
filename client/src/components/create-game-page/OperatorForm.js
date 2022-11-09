@@ -1,5 +1,11 @@
 import Checkbox from '../core/Checkbox'
 
+const NUMBER = {
+    INTEGER: 'integer',
+    DECIMAL: 'decimal',
+    FRACTION: 'fraction'
+}
+
 const OPERATOR = {
     PLUS: '+',
     MINUS: '-',
@@ -7,7 +13,7 @@ const OPERATOR = {
     DIVIDE_BY: '/'
 }
 
-const OperatorForm = ({ operator, setOperator }) => {
+const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
     return (
         <section className="operator-form">
             <div className="operator-form__selector">
@@ -41,10 +47,13 @@ const OperatorForm = ({ operator, setOperator }) => {
                     handleChange={e => setOperator({...operator, hasRemainder: e.target.value})}
                 />}
 
+                {leftNumType === NUMBER.FRACTION && rightNumType === NUMBER.FRACTION &&
                 <Checkbox
                     label="Common denominators"
                     handleChange={e => setOperator({...operator, commonDenominators: e.target.value})}
                 />
+                }
+
             </div>
 
         </section>
