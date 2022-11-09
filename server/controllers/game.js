@@ -24,7 +24,6 @@ module.exports = {
                     questions: questions,
                     hostId: req.body.hostId
                 })
-            questions.forEach(() => game.submittedAnswers.push({}))
             await game.save()
             res.json(game)
         } catch (err) {

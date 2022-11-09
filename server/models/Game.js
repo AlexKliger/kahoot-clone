@@ -72,14 +72,22 @@ const methods = {
         await this.save()
 
         return this
+    },
+    submitAnswer: async function (questionId, playerId, answerIndex) {
+        const question = this.questions.id(questionId)
+        const submittedAnswers = {...question.submittedAnswers}
+        submittedAnswers[playerId] = {
+            answerIndex: answerIndex,
+            timestamp: Date.now()
+        }
+        question.set({submittedAnswers: submittedAnswers})
+        await this.save()
+
+        return this
     }
 }
 
 const GameSchema = new mongoose.Schema({
-    players: {
-        type: [PlayerSchema],
-        default: []
-    },
     hostId: {
         type: String,
         required: true
@@ -88,24 +96,21 @@ const GameSchema = new mongoose.Schema({
         type: String,
         default: GAME_STATE.WAITING_FOR_PLAYERS
     },
-    questions: {
-        type: [QuestionSchema],
+    gameId: {
+        type: String,
+        default: uid(4)
+    },
+    players: {
+        type: [PlayerSchema],
         default: []
     },
     currentQuestion: {
         type: Number,
         default: 0
     },
-    submittedAnswers: [{
-        
-    }],
-    gameId: {
-        type: String,
-        default: uid(4)
+    questions: {
+        type: [QuestionSchema],
     }
-},
-{
-    methods: methods
-})
+}, { methods: methods })
 
 module.exports = mongoose.model('Game', GameSchema)

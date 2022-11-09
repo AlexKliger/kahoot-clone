@@ -85,7 +85,7 @@ class QuestionGenerator {
     generateQuestionObject() {
         const text = this.operator.generateQuestionString(this.leftNum, this.rightNum)
         const choices = this.operator.generateAnswerChoices()
-        const question = {question: text, answer: this.operator.answerIndex, choices: choices}
+        const question = {question: text, answerIndex: this.operator.answerIndex, choices: choices}
         return question
     }
 }

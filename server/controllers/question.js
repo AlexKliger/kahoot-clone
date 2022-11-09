@@ -32,14 +32,11 @@ module.exports = {
     submitAnswer: async (req, res) => {
         console.log('/game/questions/submitAnswer requested')
         try {
-            const game = await Game.findOne({ gameId: req.body.gameId })
-            const submittedAnswers = game.submittedAnswers
-            submittedAnswers[game.currentQuestion][req.body.playerId] = req.body.answer
-            await Game.findOneAndUpdate(
-                { gameId: req.body.gameId },
-                { submittedAnswers: submittedAnswers })
+            // Find the game that contains the given question id.
+            const game = await Game.findOne({ 'questions._id': req.params.questionId })
+            game && await game.submitAnswer(req.params.questionId, req.body.playerId, req.body.answerIndex)
             io = sockets.getSocketServer()
-            io.to(req.body.gameId).emit('data', JSON.stringify(game))
+            io.to(game.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
             console.log(err)

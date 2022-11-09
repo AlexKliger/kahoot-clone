@@ -9,10 +9,15 @@ const QuestionSchema = new mongoose.Schema({
         type: Array,
         require: true
     },
-    answer: {
+    answerIndex: {
         type: Number,
         required: true
-    } 
-})
+    },
+    submittedAnswers: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    }
+},
+{ minimize: false }) // Needed to override mongoose default of not saving empty objects.
 
 module.exports = QuestionSchema
