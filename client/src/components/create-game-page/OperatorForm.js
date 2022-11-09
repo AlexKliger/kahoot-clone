@@ -32,7 +32,7 @@ const OperatorForm = ({ operator, setOperator }) => {
                 operator.type === OPERATOR.TIMES) &&
                 <Checkbox
                     label="Regrouping"
-                    handleChange={e => setOperator({...operator, regrouping: true})}
+                    handleChange={e => setOperator({...operator, regrouping: e.target.value})}
                 />}
 
                 {operator.type === OPERATOR.DIVIDE_BY &&
@@ -40,6 +40,11 @@ const OperatorForm = ({ operator, setOperator }) => {
                     label="Has Remainder"
                     handleChange={e => setOperator({...operator, hasRemainder: e.target.value})}
                 />}
+
+                <Checkbox
+                    label="Common denominators"
+                    handleChange={e => setOperator({...operator, commonDenominators: e.target.value})}
+                />
             </div>
 
         </section>
