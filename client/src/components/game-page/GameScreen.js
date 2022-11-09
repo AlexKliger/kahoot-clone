@@ -10,8 +10,8 @@ const GameScreen = ({ game, setGame, playerId }) => {
         {game.questions[game.currentQuestion].choices.map((choice, key) => (
           <li key={key}>
             <button
-              className={`answer-choices__choice font-size--extra-large ${game.submittedAnswers[game.currentQuestion][playerId] === key ? 'answer-choices__choice--selected' : ''}`}
-              onClick={async () => setGame(await submitAnswer(playerId, game.gameId, key))}
+              className={`answer-choices__choice font-size--extra-large ${game.questions[game.currentQuestion].submittedAnswers[playerId] === key ? 'answer-choices__choice--selected' : ''}`}
+              onClick={async () => setGame(await submitAnswer(game.questions[game.currentQuestion]._id, playerId, key))}
             >
               {choice}
             </button>

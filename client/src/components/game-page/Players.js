@@ -1,6 +1,4 @@
-const Players = ({ submittedAnswers, playerId, players }) => {
-  console.log('Players( submittedAnswers:', submittedAnswers, '  playerId:', playerId, ')')
-  console.log(Object.keys(submittedAnswers).includes(playerId))
+const Players = ({ submittedAnswers, players }) => {
   return(
     <ul className="players font-size--medium">
       <h3 className="players__header font-size--large">Players</h3>

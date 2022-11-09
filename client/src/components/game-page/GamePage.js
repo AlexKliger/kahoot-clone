@@ -30,7 +30,7 @@ const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
 
                     <Players
                         players={game.players}
-                        submittedAnswers={game.submittedAnswers[game.currentQuestion]}
+                        submittedAnswers={game.questions[game.currentQuestion].submittedAnswers}
                         playerId={playerId}
                     />
 

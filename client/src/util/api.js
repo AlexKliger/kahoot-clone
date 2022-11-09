@@ -35,7 +35,7 @@ export const prevQuestion = async (gameId) => {
     return await POST('/game/questions/previous', config)
 }
 
-export const submitAnswer = async (playerId, gameId, answer) => {
-    const config = {body: JSON.stringify({ playerId: playerId, gameId: gameId, answer: answer })}
-    return await POST('/game/questions/submitAnswer', config)
+export const submitAnswer = async (questionId, playerId, answer) => {
+    const config = {body: JSON.stringify({ playerId: playerId, answerIndex: answer })}
+    return await POST(`/game/questions/submitAnswer/${questionId}`, config)
 }
