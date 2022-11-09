@@ -15,6 +15,7 @@ class Operator {
     rightNum
     regrouping
     allowImproperFractions = false
+    commonDenominators = true
     answerChoiceCount = 4
     answerIndex
 
@@ -25,37 +26,51 @@ class Operator {
     }
 
     generateQuestionString() {
+        const leftNum = this.leftNum
+        const rightNum = this.rightNum
+
         // Set whether fraction objects generate improper fractions.
-        if (this.leftNum instanceof number.Fraction) this.leftNum.allowImproper = this.allowImproperFractions
-        if (this.rightNum instanceof number.Fraction) this.rightNum.allowImproper = this.allowImproperFractions
+        if (leftNum instanceof number.Fraction) leftNum.allowImproper = this.allowImproperFractions
+        if (rightNum instanceof number.Fraction) rightNum.allowImproper = this.allowImproperFractions
 
-        this.leftNum.generateNewValue()
-        this.rightNum.generateNewValue()
+        leftNum.generateNewValue()
+        rightNum.generateNewValue()
 
-        // Adjust integers and decimals regrouping is not selected.
+        // Adjust integers and decimals if regrouping is not selected.
         const numbersAreRegroupable =
-            (this.leftNum instanceof number.Integer ||
-            this.leftNum instanceof number.Decimal) &&
-            (this.rightNum instanceof number.Integer ||
-            this.rightNum instanceof number.Decimal)
+            (leftNum instanceof number.Integer ||
+            leftNum instanceof number.Decimal) &&
+            (rightNum instanceof number.Integer ||
+            rightNum instanceof number.Decimal)
         if (!this.regrouping && numbersAreRegroupable) {
                 this.adjustForNoRegrouping()
             }
 
-        // Adjust fractions if their sum is improper and impropers are not allowed.
-        if (!this.allowImproperFractions &&
-            this.leftNum instanceof number.Fraction &&
-            this.rightNum instanceof number.Fraction) {
-                let answer = math.add(this.leftNum.value, this.rightNum.value)
+        // Adjust fractions
+        if (leftNum instanceof number.Fraction &&
+            rightNum instanceof number.Fraction) {
+            // Adjust if sum is improper
+            if (!this.allowImproperFractions) {
+                let answer = math.add(leftNum.value, rightNum.value)
                 while (answer.n > answer.d) {
                     const coinFlip = Math.round(Math.random())
                     if (coinFlip) {
-                        this.leftNum.value.d++
+                        leftNum.value.d++
                     } else {
-                        this.rightNum.value.d++
+                        rightNum.value.d++
                     }
-                    answer = math.add(this.leftNum.value, this.rightNum.value)
+                    answer = math.add(leftNum.value, rightNum.value)
                 }
+            }
+            // Adjust for common denominators
+            // Set both denominators to the larger of the two
+            if (this.commonDenominators) {
+                if (leftNum.value.d > rightNum.value.d) {
+                    rightNum.value.d = leftNum.value.d
+                } else {
+                    leftNum.value.d = rightNum.value.d
+                }
+            }
         }
     }
 
