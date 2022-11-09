@@ -66,16 +66,28 @@ class QuestionGenerator {
         // Route the operator type to appropriate class constructor.
         switch (operatorConfig.type) {
             case OPERATOR.PLUS:
-                this.operator = new operators.Plus(this.leftNum, this.rightNum, operatorConfig.regrouping)
+                this.operator = new operators.Plus(
+                    this.leftNum,
+                    this.rightNum,
+                    operatorConfig)
                 break
             case OPERATOR.MINUS:
-                this.operator = new operators.Minus(this.leftNum, this.rightNum, operatorConfig.regrouping)
+                this.operator = new operators.Minus(
+                    this.leftNum,
+                    this.rightNum,
+                    operatorConfig)
                 break
             case OPERATOR.TIMES:
-                this.operator = new operators.Times(this.leftNum, this.rightNum, operatorConfig.regrouping)
+                this.operator = new operators.Times(
+                    this.leftNum,
+                    this.rightNum,
+                    operatorConfig)
                 break
             case OPERATOR.DIVIDE_BY:
-                this.operator = new operators.DivideBy(this.leftNum, this.rightNum, operatorConfig.hasRemainder)
+                this.operator = new operators.DivideBy(
+                    this.leftNum,
+                    this.rightNum,
+                    operatorConfig)
                 break
             default:
                 break

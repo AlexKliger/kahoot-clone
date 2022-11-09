@@ -15,14 +15,15 @@ class Operator {
     rightNum
     regrouping
     allowImproperFractions = false
-    commonDenominators = true
+    commonDenominators
     answerChoiceCount = 4
     answerIndex
 
-    constructor(leftNum, rightNum, regrouping) {
-        this.regrouping = regrouping
+    constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false}) {
         this.leftNum = leftNum
         this.rightNum = rightNum
+        this.regrouping = regrouping
+        this.commonDenominators = commonDenominators
     }
 
     generateQuestionString() {
