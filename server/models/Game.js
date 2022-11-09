@@ -43,18 +43,20 @@ const methods = {
         return this
     },
     nextQuestion: async function () {
+        const currentQuestion = this.questions[this.currentQuestion]
         if (this.currentQuestion >= this.questions.length - 1) {
             this.state = GAME_STATE.GAME_ENDED
         } else {
+            // Tally scores.
             this.players.forEach(player => {
-                const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
-                const correctAnswer = this.questions[this.currentQuestion].answer
+                const playerAnswer = currentQuestion.submittedAnswers[player.playerId]
                 // If player chooses the correct answer, increment score.
-                if (playerAnswer === correctAnswer) player.score++
+                if (playerAnswer) {
+                    (currentQuestion.answerIndex === playerAnswer.answerIndex) && player.score++
+                }
             })
             this.currentQuestion++
         }
-        
         await this.save()
 
         return this
@@ -63,11 +65,14 @@ const methods = {
         if (this.currentQuestion <= 0) return this
 
         this.currentQuestion--
+        const currentQuestion = this.questions[this.currentQuestion]
+        // "Untally" scores.
         this.players.forEach(player => {
-            const playerAnswer = this.submittedAnswers[this.currentQuestion][player.playerId]
-            const correctAnswer = this.questions[this.currentQuestion].answer
-            // If player chose the correct answer, decrement score.
-            playerAnswer === correctAnswer && player.score--
+            const playerAnswer = currentQuestion.submittedAnswers[player.playerId]
+            // If player previously chose the correct answer, decrement score.
+            if (playerAnswer) {
+                (currentQuestion.answerIndex === playerAnswer.answerIndex) && player.score--
+            }
         })
         await this.save()
 
