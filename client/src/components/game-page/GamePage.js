@@ -20,7 +20,11 @@ const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
                     }
 
                     {game.state === GAME_STATE.GAME_STARTED &&
-                    <GameScreen game={game} setGame={setGame} playerId={playerId} />
+                    <GameScreen
+                        question={game.questions[game.currentQuestion]}
+                        setGame={setGame}
+                        playerId={playerId}
+                    />
                     }
                 </div>
 
