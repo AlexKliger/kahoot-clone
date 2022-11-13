@@ -7,7 +7,7 @@ let io = socketServer.getSocketServer()
 
 module.exports = {
     create: async (req, res) => {
-        console.log('/game/create requested')
+        console.log('%c/game/create requested', 'color: green')
         try {
             const leftNumConfig = req.body.leftNumConfig
             const rightNumConfig = req.body.rightNumConfig
@@ -36,8 +36,6 @@ module.exports = {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && game.addPlayer(req.body.playerId, req.body.playerName)
             io = socketServer.getSocketServer()
-            console.log('   gameId:', req.body.gameId)
-
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
@@ -69,7 +67,6 @@ module.exports = {
             const game = await Game.findOne({ gameId: req.body.gameId })
             await game.start()
             io = socketServer.getSocketServer()
-            console.log('   gameId:', req.body.gameId)
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
         } catch (err) {
@@ -81,7 +78,6 @@ module.exports = {
         try {
             const game = await Game.findOne({gameId: req.body.gameId})
             await game.reset()
-            console.log('   gameId:', req.body.gameId)
             io = socketServer.getSocketServer()
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)

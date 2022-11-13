@@ -14,16 +14,17 @@ class Operator {
     leftNum
     rightNum
     regrouping
-    allowImproperFractions = false
     commonDenominators
+    allowImproperFractions
     answerChoiceCount = 4
     answerIndex
 
-    constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false}) {
+    constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false, allowImproperFractions = false}) {
         this.leftNum = leftNum
         this.rightNum = rightNum
         this.regrouping = regrouping
         this.commonDenominators = commonDenominators
+        this.allowImproperFractions = allowImproperFractions
     }
 
     generateQuestionString() {
@@ -128,8 +129,6 @@ class Plus extends Operator {
     }
 
     adjustForNoRegrouping() {
-        console.log('adjustForNoRegrouping')
-        console.log('   leftNum:', this.leftNum.value, 'rightNum:', this.rightNum.value)
         const numWithMostDigits = this.leftNum.digits > this.rightNum.digits ? this.leftNum : this.rightNum
         const decimalPlaces = numWithMostDigits.decimalPlaces || 0
         let valueL = this.leftNum.value
@@ -147,9 +146,7 @@ class Plus extends Operator {
             }
 
             // Remove place value for next iteration of loop.
-            console.log(`       digitL: ${digitL} in ${10**i}'s place`)
             valueL = math.round(valueL - digitL * 10**i, decimalPlaces)
-            console.log(`       digitR: ${digitR} in ${10**i}'s place`)
             valueR = math.round(valueR - digitR * 10**i, decimalPlaces)
 
             // If the sum of the digits is less then 10 then nothing needs to be adjusted.
@@ -165,7 +162,6 @@ class Plus extends Operator {
                     this.rightNum.value = math.round(this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
-                console.log('       ', digitL, '+', digitR, '=', digitL + digitR)
             }
         }       
     }
@@ -186,8 +182,6 @@ class Minus extends Operator {
     }
 
     adjustForNoRegrouping() {
-        console.log('adjustForNoRegrouping')
-        console.log('   leftNum:', this.leftNum.value, 'rightNum:', this.rightNum.value)
         const numWithMostDigits = this.leftNum.digits > this.rightNum.digits ? this.leftNum : this.rightNum
         const decimalPlaces = numWithMostDigits.decimalPlaces || 0
         let valueL = this.leftNum.value
@@ -205,14 +199,11 @@ class Minus extends Operator {
             }
 
             // Remove place value for next iteration of loop.
-            console.log(`       digitL: ${digitL} in ${10**i}'s place`)
             valueL = math.round(valueL - digitL * 10**i, decimalPlaces)
-            console.log(`       digitR: ${digitR} in ${10**i}'s place`)
             valueR = math.round(valueR - digitR * 10**i, decimalPlaces)
 
             // If the left digit is greater than the right digit, nothing needs to be done
             if (digitL >= digitR) continue
-            console.log('       digitL < digitR')
             // Randomly increment either the left or right digit until the left digit is greater than the right digit buy a random offset.
             const offset = Math.floor(Math.random() * 10)
             while (digitL - digitR < offset) {
@@ -224,7 +215,6 @@ class Minus extends Operator {
                     this.rightNum.value = math.round (this.rightNum.value - 10**i, decimalPlaces)
                     digitR--
                 }
-                console.log('       digitL:', digitL, 'digitR:', digitR)
             }
 
 
@@ -240,8 +230,6 @@ class Times extends Operator {
     }
 
     adjustForNoRegrouping() {
-        console.log('adjustForNoRegrouping')
-        console.log('   leftNum:', this.leftNum.value, 'rightNum:', this.rightNum.value)
         const decimalPlacesL = this.leftNum.decimalPlaces || 0
         const decimalPlacesR = this.rightNum.decimalPlaces || 0
         let valueL = this.leftNum.value
@@ -265,10 +253,9 @@ class Times extends Operator {
                     digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
                 }
                 valueR = math.round(valueR - digitR * 10**i, decimalPlacesR)
-                console.log(`   ${10**i}'s place: digitL: ${digitL}  digitR: ${digitR}`)
 
                 if (digitL * digitR < 10) continue
-                console.log('       digitL * digitR > 10')
+
                 while (digitL * digitR >= 10) {
                     const coinFlip = Math.round(Math.random())
                     if (coinFlip && digitL > 0) {
