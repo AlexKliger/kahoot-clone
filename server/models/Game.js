@@ -18,10 +18,10 @@ const methods = {
         return this
     },
     reset: async function () {
-        this.currentQuestion = 0
-        this.players.forEach(player => player.score = 0)
-        this.submittedAnswers = Array(this.questions.length).fill({})
-        this.state = GAME_STATE.WAITING_FOR_PLAYERS
+        this.currentQuestion = 0 // Reset to first question
+        this.players.forEach(player => player.score = 0) // Reset scores
+        this.questions.forEach(question => question.submittedAnswers = {}) // Reset answers
+        this.state = GAME_STATE.WAITING_FOR_PLAYERS // Reset state
         this.save()
         return this
     },
