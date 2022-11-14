@@ -235,22 +235,23 @@ class Times extends Operator {
         let valueL = this.leftNum.value
         let valueR = this.rightNum.value
         let digitL, digitR;
-        // Parse digit of left number.
+        // Parse digit of left number starting from largest place value.
         for (let i = this.leftNum.digits - decimalPlacesL - 1; i >= -decimalPlacesL; i--) {
+            // Integer & decimal place values needed to be treated separetely due to JS floating point errors.
             if (i >= 0) {
                 digitL = Math.floor(valueL / 10**i)
             } else {
-                digitL = Math.floor(math.round(valueL / 10**i, decimalPlaces))
+                digitL = Math.floor(math.round(valueL / 10**i, decimalPlacesL))
             }
             valueL = math.round(valueL - digitL * 10**i, decimalPlacesL)
             
-            // Parse digit of right number.
+            // Parse digit of right number starting from largest place value.
             for (let j = this.rightNum.digits - decimalPlacesR - 1; j >= -decimalPlacesR; j--) {
-                // Parse left and right digits
-                if (i >= 0) {
+                // Integer & decimal place values needed to be treated separetely due to JS floating point errors.
+                if (j >= 0) {
                     digitR = Math.floor(valueR / 10**i)
                 } else {
-                    digitR = Math.floor(math.round(valueR / 10**i, decimalPlaces))
+                    digitR = Math.floor(math.round(valueR / 10**i, decimalPlacesR))
                 }
                 valueR = math.round(valueR - digitR * 10**i, decimalPlacesR)
 
@@ -292,5 +293,11 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
+
+num1 = new Decimal('positive', 3, 2)
+num2 = new Decimal('positive', 3, 4)
+op = new Times(num1, num2, {regrouping: false})
+
+op.generateQuestionString()
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
