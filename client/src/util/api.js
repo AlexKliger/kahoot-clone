@@ -1,11 +1,11 @@
 import { GET, DELETE, POST, PUT } from './fetch'
 
-export const createGame = async (hostId, leftNumConfig, rightNumConfig, operatorConfig) => {
+export const createGame = async (hostId, configLeft, configRight, configOperator) => {
     const config = {body: JSON.stringify({
         hostId,
-        leftNumConfig,
-        rightNumConfig,
-        operatorConfig })}
+        configLeft,
+        configRight,
+        configOperator })}
     return await POST('/game/create', config)
 }
 

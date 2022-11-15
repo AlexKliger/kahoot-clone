@@ -1,21 +1,21 @@
 const Game = require('../models/Game')
 const { uid } = require('uid')
 const socketServer = require('../webSocketServer')
-const QuestionGenerator = require('../question-generator/questionGenerator')
+const questionGenerator = require('../question-generator/questionGenerator')
 
 let io = socketServer.getSocketServer()
 
 module.exports = {
     create: async (req, res) => {
-        console.log('%c/game/create requested', 'color: green')
+        console.log('/game/create requested', 'color: green')
         try {
-            const leftNumConfig = req.body.leftNumConfig
-            const rightNumConfig = req.body.rightNumConfig
-            const operatorConfig = req.body.operatorConfig
+            const configLeft = req.body.configLeft
+            const configRight = req.body.configRight
+            const configOperator = req.body.configOperator
             const questions = []
-            const questionGenerator = new QuestionGenerator(leftNumConfig, rightNumConfig, operatorConfig)
+            const generator = questionGenerator(configLeft, configRight, configOperator)
             for (let i = 0; i < 10; i++) {
-                questions.push(questionGenerator.generateQuestionObject())
+                questions.push(generator.generateQuestionObject())
             }
             await Game.findOneAndDelete({ gameId: req.body.gameId })
             const game = await Game.create(
