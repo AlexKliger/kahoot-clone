@@ -10,7 +10,7 @@ class Number {
     sign
     value
 
-    constructor(sign) {
+    constructor({sign = 'positive'}) {
         this.sign = sign
     }
 
@@ -26,7 +26,7 @@ class Number {
 class Integer extends Number {
     digits
 
-    constructor(sign, digits) {
+    constructor({sign = 'positive', digits = 1}) {
         super(sign)
         this.digits = digits
     }
@@ -42,7 +42,7 @@ class Integer extends Number {
 class Decimal extends Integer {
     decimalPlaces
 
-    constructor(sign, digits, decimalPlaces) {
+    constructor({sign = 'positive', digits = 1, decimalPlaces = 1}) {
         super(sign, digits)
         this.decimalPlaces = decimalPlaces
     }
@@ -59,7 +59,7 @@ class Fraction extends Number {
     digitsInDen
     allowImproper
 
-    constructor(sign, digitsInNum, digitsInDen, allowImproper) {
+    constructor({sign = 'positive', digitsInNum = 1, digitsInDen = 1, allowImproper = false}) {
         super(sign)
         this.digitsInNum = digitsInNum
         this.digitsInDen = digitsInDen
