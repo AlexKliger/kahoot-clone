@@ -16,6 +16,9 @@ const QuestionSchema = new mongoose.Schema({
     submittedAnswers: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
+    },
+    timestamp: {
+        type: Date,
     }
 },
 { minimize: false }) // Needed to override mongoose default of not saving empty objects.
