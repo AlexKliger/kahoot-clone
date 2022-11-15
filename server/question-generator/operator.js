@@ -1,5 +1,4 @@
 const math = require('mathjs')
-const { Integer, Decimal, Fraction } = require('./number')
 const number = require('./number')
 
 // Normal distribution using Box-Muller transform
@@ -17,7 +16,6 @@ class Operator {
     commonDenominators
     allowImproperFractions
     answerChoiceCount = 4
-    answerIndex
 
     constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false, allowImproperFractions = false}) {
         this.leftNum = leftNum
@@ -25,6 +23,13 @@ class Operator {
         this.regrouping = regrouping
         this.commonDenominators = commonDenominators
         this.allowImproperFractions = allowImproperFractions
+    }
+
+    generateQuestionObject() {
+        return {
+            question: this.generateQuestionString(),
+            ...this.generateAnswerChoices(),
+        }
     }
 
     generateQuestionString() {
@@ -77,7 +82,7 @@ class Operator {
     }
 
     generateAnswerChoices() {
-        const answerChoices = []
+        const choices = []
         let answer
         if (this instanceof Plus) {
             answer = math.add(this.leftNum.value, this.rightNum.value)
@@ -90,7 +95,7 @@ class Operator {
         }
 
         // Generate unique answer choices.
-        while (answerChoices.length < this.answerChoiceCount - 1) {
+        while (choices.length < this.answerChoiceCount - 1) {
             let wrongAnswer
             if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
                 const offsetNum = Math.round(answer.n * normalDistribution())
@@ -105,15 +110,15 @@ class Operator {
                 wrongAnswer = answer + offset
             }
 
-            if (!answerChoices.includes(math.format(wrongAnswer)) && math.format(wrongAnswer) !== math.format(answer)) {
-                answerChoices.push(math.format(wrongAnswer))
+            if (!choices.includes(math.format(wrongAnswer)) && math.format(wrongAnswer) !== math.format(answer)) {
+                choices.push(math.format(wrongAnswer))
             }
         }
         // Insert the real answer into a random index.
-        this.answerIndex = Math.floor(Math.random() * this.answerChoiceCount)
-        answerChoices.splice(this.answerIndex, 0, math.format(answer))
+        const answerIndex = Math.floor(Math.random() * this.answerChoiceCount)
+        choices.splice(answerIndex, 0, math.format(answer))
 
-        return answerChoices
+        return {choices, answerIndex}
     }
 
     adjustForNoRegrouping() {
@@ -293,11 +298,5 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
-
-num1 = new Decimal('positive', 3, 2)
-num2 = new Decimal('positive', 3, 4)
-op = new Times(num1, num2, {regrouping: false})
-
-op.generateQuestionString()
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
