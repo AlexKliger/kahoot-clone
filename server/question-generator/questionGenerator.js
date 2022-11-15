@@ -14,71 +14,64 @@ const OPERATOR = {
     DIVIDE_BY: '/'
 }
 
-// Class that parses JSON objects and instantiates number and operator objects.
-class QuestionGenerator {
-    numLeft
-    numRight
-    operator
+function generateQuestions(configs, count) {
+    const questions = []
+    const operators = configs.map(config => {
+        const numLeft = jsonToNumber(config.left)
+        const numRight = jsonToNumber(config.right)
+        const operator = jsonToOperator(config.operator, numLeft, numRight)
 
-    constructor(configLeft, configRight, configOp) {
-        this.numLeft = this.#jsonToNumber(configLeft)
-
-        this.numRight = this.#jsonToNumber(configRight)
-
-        this.operator = this.#jsonToOperator(configOp)
+        return operator
+    })
+    
+    for (let i = 0; i < count; i++) {
+        const randomIndex = Math.floor(Math.random() * operators.length)
+        const question = operators[randomIndex].generateQuestionObject()
+        questions.push(question)
     }
 
-    generateQuestionObject() {
-        const text = this.operator.generateQuestionString(this.numLeft, this.numRight)
-        const choices = this.operator.generateAnswerChoices()
-        const question = {question: text, answerIndex: this.operator.answerIndex, choices: choices}
-        return question
-    }
+    return questions
+}
 
-    #jsonToNumber(configNum) {
-        switch (configNum.type) {
-            case NUMBER_TYPE.INTEGER:
-                return new numbers.Integer(configNum)
-                break
-            case NUMBER_TYPE.DECIMAL:
-                return new numbers.Decimal(configNum)
-                break
-            case NUMBER_TYPE.FRACTION:
-                return new numbers.Fraction(configNum)
-                break
-        }
-    }
-
-    #jsonToOperator(configOp) {
-        switch (configOp.type) {
-            case OPERATOR.PLUS:
-                return new operators.Plus(
-                    this.numLeft,
-                    this.numRight,
-                    configOp)
-                break
-            case OPERATOR.MINUS:
-                return operators.Minus(
-                    this.numLeft,
-                    this.numRight,
-                    configOp)
-                break
-            case OPERATOR.TIMES:
-                return operators.Times(
-                    this.numLeft,
-                    this.numRight,
-                    configOp)
-                break
-            case OPERATOR.DIVIDE_BY:
-                return operators.DivideBy(
-                    this.numLeft,
-                    this.numRight,
-                    configOp)
-                break
-            default:
-                break
-        }
+function jsonToNumber(configNum) {
+    switch (configNum.type) {
+        case NUMBER_TYPE.INTEGER:
+            return new numbers.Integer(configNum)
+            break
+        case NUMBER_TYPE.DECIMAL:
+            return new numbers.Decimal(configNum)
+            break
+        case NUMBER_TYPE.FRACTION:
+            return new numbers.Fraction(configNum)
+            break
     }
 }
 
-module.exports = QuestionGenerator
+function jsonToOperator(configOp, numLeft, numRight) {
+    switch (configOp.type) {
+        case OPERATOR.PLUS:
+            return new operators.Plus(
+                numLeft,
+                numRight,
+                configOp)
+        case OPERATOR.MINUS:
+            return new operators.Minus(
+                numLeft,
+                numRight,
+                configOp)
+        case OPERATOR.TIMES:
+            return new operators.Times(
+                numLeft,
+                numRight,
+                configOp)
+        case OPERATOR.DIVIDE_BY:
+            return new operators.DivideBy(
+                numLeft,
+                numRight,
+                configOp)
+        default:
+            break
+    }
+}
+
+module.exports = generateQuestions
