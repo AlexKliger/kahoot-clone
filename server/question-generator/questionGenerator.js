@@ -1,4 +1,3 @@
-const { number } = require('mathjs')
 const numbers = require('./number')
 const operators = require('./operator')
 
@@ -17,88 +16,68 @@ const OPERATOR = {
 
 // Class that parses JSON objects and instantiates number and operator objects.
 class QuestionGenerator {
-    leftNum
-    rightNum
+    numLeft
+    numRight
     operator
 
-    constructor(leftNumConfig, rightNumConfig, operatorConfig) {
-        // Route the left number type to appropriate class constructor
-        switch (leftNumConfig.type) {
-            case NUMBER_TYPE.INTEGER:
-                this.leftNum = new numbers.Integer(
-                    leftNumConfig.sign,
-                    leftNumConfig.digits)
-                break
-            case NUMBER_TYPE.DECIMAL:
-                this.leftNum = new numbers.Decimal(
-                    leftNumConfig.sign,
-                    leftNumConfig.digits,
-                    leftNumConfig.decimalPlaces)
-                break
-            case NUMBER_TYPE.FRACTION:
-                this.leftNum = new numbers.Fraction(
-                    leftNumConfig.sign,
-                    leftNumConfig.digitsInNum,
-                    leftNumConfig.digitsInDen)
-                break
+    constructor(configLeft, configRight, configOp) {
+        this.numLeft = this.#jsonToNumber(configLeft)
 
-        }
-        // Route the left number type to appropriate class constructor
-        switch (rightNumConfig.type) {
+        this.numRight = this.#jsonToNumber(configRight)
+
+        this.operator = this.#jsonToOperator(configOp)
+    }
+
+    generateQuestionObject() {
+        const text = this.operator.generateQuestionString(this.numLeft, this.numRight)
+        const choices = this.operator.generateAnswerChoices()
+        const question = {question: text, answerIndex: this.operator.answerIndex, choices: choices}
+        return question
+    }
+
+    #jsonToNumber(configNum) {
+        switch (configNum.type) {
             case NUMBER_TYPE.INTEGER:
-                this.rightNum = new numbers.Integer(
-                    rightNumConfig.sign,
-                    rightNumConfig.digits)
+                return new numbers.Integer(configNum)
                 break
             case NUMBER_TYPE.DECIMAL:
-                this.rightNum = new numbers.Decimal(
-                    rightNumConfig.sign,
-                    rightNumConfig.digits,
-                    rightNumConfig.decimalPlaces)
+                return new numbers.Decimal(configNum)
                 break
             case NUMBER_TYPE.FRACTION:
-                this.rightNum = new numbers.Fraction(
-                    rightNumConfig.sign,
-                    rightNumConfig.digitsInNum,
-                    rightNumConfig.digitsInDen)
-                break
-        }
-        // Route the operator type to appropriate class constructor.
-        switch (operatorConfig.type) {
-            case OPERATOR.PLUS:
-                this.operator = new operators.Plus(
-                    this.leftNum,
-                    this.rightNum,
-                    operatorConfig)
-                break
-            case OPERATOR.MINUS:
-                this.operator = new operators.Minus(
-                    this.leftNum,
-                    this.rightNum,
-                    operatorConfig)
-                break
-            case OPERATOR.TIMES:
-                this.operator = new operators.Times(
-                    this.leftNum,
-                    this.rightNum,
-                    operatorConfig)
-                break
-            case OPERATOR.DIVIDE_BY:
-                this.operator = new operators.DivideBy(
-                    this.leftNum,
-                    this.rightNum,
-                    operatorConfig)
-                break
-            default:
+                return new numbers.Fraction(configNum)
                 break
         }
     }
 
-    generateQuestionObject() {
-        const text = this.operator.generateQuestionString(this.leftNum, this.rightNum)
-        const choices = this.operator.generateAnswerChoices()
-        const question = {question: text, answerIndex: this.operator.answerIndex, choices: choices}
-        return question
+    #jsonToOperator(configOp) {
+        switch (configOp.type) {
+            case OPERATOR.PLUS:
+                return new operators.Plus(
+                    this.numLeft,
+                    this.numRight,
+                    configOp)
+                break
+            case OPERATOR.MINUS:
+                return operators.Minus(
+                    this.numLeft,
+                    this.numRight,
+                    configOp)
+                break
+            case OPERATOR.TIMES:
+                return operators.Times(
+                    this.numLeft,
+                    this.numRight,
+                    configOp)
+                break
+            case OPERATOR.DIVIDE_BY:
+                return operators.DivideBy(
+                    this.numLeft,
+                    this.numRight,
+                    configOp)
+                break
+            default:
+                break
+        }
     }
 }
 
