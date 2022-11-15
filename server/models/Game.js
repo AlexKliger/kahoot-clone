@@ -43,20 +43,21 @@ const methods = {
         return this
     },
     nextQuestion: async function () {
+        // Tally scores.
         const currentQuestion = this.questions[this.currentQuestion]
+        this.players.forEach(player => {
+            const playerAnswer = currentQuestion.submittedAnswers[player.playerId]
+            // If player chooses the correct answer, increment score.
+            if (playerAnswer) {
+                (currentQuestion.answerIndex === playerAnswer.answerIndex) && player.score++
+            }
+        })
         if (this.currentQuestion >= this.questions.length - 1) {
             this.state = GAME_STATE.GAME_ENDED
         } else {
-            // Tally scores.
-            this.players.forEach(player => {
-                const playerAnswer = currentQuestion.submittedAnswers[player.playerId]
-                // If player chooses the correct answer, increment score.
-                if (playerAnswer) {
-                    (currentQuestion.answerIndex === playerAnswer.answerIndex) && player.score++
-                }
-            })
             this.currentQuestion++
         }
+
         await this.save()
 
         return this

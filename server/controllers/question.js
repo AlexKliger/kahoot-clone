@@ -9,7 +9,6 @@ module.exports = {
         try {
             const game = await Game.findOne({ gameId: req.body.gameId })
             game && await game.nextQuestion()
-            console.log('   gameId:', req.body.gameId)
             io = sockets.getSocketServer()
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             res.json(game)
