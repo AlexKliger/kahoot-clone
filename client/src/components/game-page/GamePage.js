@@ -30,7 +30,7 @@ const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
 
                 <aside className="page--game__container__aside">
                     {game.state === GAME_STATE.GAME_STARTED &&
-                    <h3 className="font-size--large">Question {game.currentQuestion + 1}/{game.questions.length}</h3>}
+                    <h3 className="font-size--extra-large">Question {game.currentQuestion + 1}/{game.questions.length}</h3>}
 
                     <Players
                         players={game.players}

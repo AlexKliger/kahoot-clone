@@ -9,7 +9,7 @@ const Players = ({ submittedAnswers, players }) => {
           key={key}
         >
           <i className={`fas fa-star ${!Object.keys(submittedAnswers).includes(player.playerId) ? "hidden" : ""}`}></i>
-          <span> {player.playerName}'s score: {player.score}</span>
+          <span style={{"font-weight": "bold"}}> {player.playerName}'s score: {player.score}</span>
         </li>
       ))
       }

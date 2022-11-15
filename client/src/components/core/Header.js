@@ -6,7 +6,7 @@ const Header = ({ gameId }) => {
     return (
         <header className="header">
             <nav className="margin-centered" style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center", "width": "75%"}}>
-                <h1 className="font-size--extra-large">Mathomizer</h1>
+                <h1 style={{"letterSpacing": "0.5rem"}} className="font-size--extra-large">MATHOMIZER</h1>
                 
                 <Routes>
                     <Route
@@ -25,7 +25,7 @@ const Header = ({ gameId }) => {
                     <Route
                         path="/game/play"
                         element={
-                            <span className="font-size--large">Game ID: {gameId}</span>
+                            <span className="font-size--extra-large">Game ID: {gameId}</span>
                         }
                     ></Route>
                 </Routes>
