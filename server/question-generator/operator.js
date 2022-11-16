@@ -82,6 +82,11 @@ class Operator {
     }
 
     generateAnswerChoices() {
+        const decimalPlaces = Math.max(
+            this.leftNum.decimalPlaces,
+            this.rightNum.decimalPlaces,
+            this instanceof Times ? this.leftNum.decimalPlaces + this.rightNum.decimalPlaces : 0 // If multiplication then decimal place value is sum left & right decimal places.
+            ) || 0
         const choices = []
         let answer
         if (this instanceof Plus) {
@@ -93,20 +98,20 @@ class Operator {
         } else if (this instanceof DivideBy) {
             answer = math.divide(this.leftNum.value, this.rightNum.value)
         }
-
+        answer = math.round(answer, decimalPlaces)
         // Generate unique answer choices.
+        let wrongAnswer, offset
+        
         while (choices.length < this.answerChoiceCount - 1) {
-            let wrongAnswer
             if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
-                const offsetNum = Math.round(answer.n * normalDistribution())
+                const offsetNum = Math.round(answer.n * normalDistribution()) ////
                 const offsetDen = Math.round(answer.d * normalDistribution())
                 wrongAnswer = math.fraction(answer.n + offsetNum, answer.d + offsetDen || 1)
             } else if (this.leftNum instanceof number.Decimal || this.rightNum instanceof number.Decimal) {
-                const offset = answer * normalDistribution()
-                answer = math.round(answer, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
-                wrongAnswer = math.round(answer + offset, Math.max(this.leftNum.decimalPlaces, this.rightNum.decimalPlaces))
+                offset = (answer + 1) * normalDistribution()
+                wrongAnswer = math.round(answer + offset, decimalPlaces)
             } else {
-                const offset = Math.round((answer + 10) * normalDistribution())
+                offset = Math.round((answer + 10) * normalDistribution())
                 wrongAnswer = answer + offset
             }
 
