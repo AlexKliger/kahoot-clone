@@ -43,8 +43,8 @@ function App() {
     setSocket(null)
   }, [navigate, playerId, socket, game])
 
-  const handleCreateGame = useCallback(async (leftNumConfig, rightNumConfig, operatorConfig) => {
-    const newGame = await createGame(playerId, leftNumConfig, rightNumConfig, operatorConfig)
+  const handleCreateGame = useCallback(async (configs) => {
+    const newGame = await createGame(playerId, configs)
     setGame(newGame)
     handleJoinGame('host', newGame.gameId)
     navigate('/game/play', { replace: true })
