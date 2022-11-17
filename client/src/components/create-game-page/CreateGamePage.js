@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import ConfigList from './ConfigList'
 import NumberForm from './NumberForm'
 import OperatorForm from './OperatorForm'
 
@@ -24,11 +25,13 @@ const CreateGamePage = ( { handleSubmit }) => {
     const [leftNum, setLeftNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
     const [rightNum, setRightNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
     const [operator, setOperator] = useState({type: OPERATOR.PLUS, regrouping: false})
+    
+    const [configs, setConfigs] = useState([])
 
     const onSubmit = useCallback(e => {
-        handleSubmit(leftNum, rightNum, operator)
+        handleSubmit(configs)
         e.preventDefault()
-    }, [leftNum, rightNum, operator, handleSubmit])
+    }, [configs, handleSubmit])
 
     return (
         <section className="page margin-centered">
@@ -51,6 +54,17 @@ const CreateGamePage = ( { handleSubmit }) => {
                     setNumber={setRightNum}
                     label={"Right Number"}
                 />
+
+                <div>
+                    <div style={{"margin-bottom": "1rem","display": "flex", "justifyContent": "center", "gap": "1rem"}}>
+                        <h3 className="font-size--large">Configs</h3>
+                        <button
+                            type="button"
+                            onClick={() => setConfigs([...configs, {left: leftNum, right: rightNum, operator: operator}])}
+                        >+</button>
+                    </div>
+                    <ConfigList configs={configs} setConfigs={setConfigs} />
+                </div>
 
                 <input style={{"padding": "0.5rem 1rem"}} className="font-size--medium" type="submit" value="Create"></input>
             </form>
