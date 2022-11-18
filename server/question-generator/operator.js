@@ -12,14 +12,16 @@ function normalDistribution() {
 class Operator {
     leftNum
     rightNum
+    answerFormat
     regrouping
     commonDenominators
     allowImproperFractions
     answerChoiceCount = 4
 
-    constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false, allowImproperFractions = false}) {
+    constructor(leftNum, rightNum, {regrouping = true, commonDenominators = false, allowImproperFractions = true, answerFormat = 'decimal'}) {
         this.leftNum = leftNum
         this.rightNum = rightNum
+        this.answerFormat = answerFormat
         this.regrouping = regrouping
         this.commonDenominators = commonDenominators
         this.allowImproperFractions = allowImproperFractions
@@ -82,37 +84,13 @@ class Operator {
     }
 
     generateAnswerChoices() {
-        const decimalPlaces = Math.max(
-            this.leftNum.decimalPlaces,
-            this.rightNum.decimalPlaces,
-            this instanceof Times ? this.leftNum.decimalPlaces + this.rightNum.decimalPlaces : 0 // If multiplication then decimal place value is sum left & right decimal places.
-            ) || 0
-        const choices = []
-        let answer
-        if (this instanceof Plus) {
-            answer = math.add(this.leftNum.value, this.rightNum.value)
-        } else if (this instanceof Minus) {
-            answer = math.subtract(this.leftNum.value, this.rightNum.value)
-        } else if (this instanceof Times) {
-            answer = math.multiply(this.leftNum.value, this.rightNum.value)
-        } else if (this instanceof DivideBy) {
-            answer = math.divide(this.leftNum.value, this.rightNum.value)
-        }
+        let answer = this.#getAnswer()
 
         // Generate unique answer choices.
-        let wrongAnswer, offset
+        const choices = []
+        let wrongAnswer
         while (choices.length < this.answerChoiceCount - 1) {
-            if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
-                const offsetNum = Math.round(answer.n * normalDistribution()) ////
-                const offsetDen = Math.round(answer.d * normalDistribution())
-                wrongAnswer = math.fraction(answer.n + offsetNum, answer.d + offsetDen || 1)
-            } else if (this.leftNum instanceof number.Decimal || this.rightNum instanceof number.Decimal) {
-                offset = (answer + 1) * normalDistribution()
-                wrongAnswer = math.round(answer + offset, decimalPlaces)
-            } else {
-                offset = Math.round((answer + 10) * normalDistribution())
-                wrongAnswer = answer + offset
-            }
+            wrongAnswer = this.#getWrongAnswer(answer)
 
             if (!choices.includes(math.format(wrongAnswer)) && math.format(wrongAnswer) !== math.format(answer)) {
                 choices.push(math.format(wrongAnswer))
@@ -120,9 +98,52 @@ class Operator {
         }
         // Insert the real answer into a random index.
         const answerIndex = Math.floor(Math.random() * this.answerChoiceCount)
-        choices.splice(answerIndex, 0, math.format(answer))
+        choices.splice(answerIndex, 0, math.format(this.answerFormat === 'fraction' ? math.fraction(answer) : answer))
 
         return {choices, answerIndex}
+    }
+
+    #getAnswer() {
+        let answer
+        // Apply appropriate math operation.
+        // Numbers converted to fractions to prevent JS floating point errors.
+        const valueL = math.fraction(this.leftNum.value)
+        const valueR = math.fraction(this.rightNum.value)
+        if (this instanceof Plus) {
+            answer = math.add(valueL, valueR)
+        } else if (this instanceof Minus) {
+            answer = math.subtract(valueL, valueR)
+        } else if (this instanceof Times) {
+            answer = math.multiply(valueL, valueR)
+        } else if (this instanceof DivideBy) {
+            answer = math.divide(valueL, valueR)
+        }
+
+        return this.answerFormat === 'ratio' ? answer : math.number(answer)
+    }
+
+    #getWrongAnswer(answer) {
+        let wrongAnswer, offset
+        if (this.answerFormat === 'ratio') {
+            wrongAnswer = math.fraction(answer.n, answer.d)
+            wrongAnswer.n += math.round(math.multiply(wrongAnswer.n, normalDistribution()))
+            wrongAnswer.d += math.round(math.multiply(wrongAnswer.d, normalDistribution()))
+
+            return wrongAnswer
+        }
+
+        const decimalPlacesL = this.leftNum.decimalPlaces || 0
+        const decimalPlacesR = this.rightNum.decimalPlaces || 0
+        const decimalPlaces = Math.max(
+            decimalPlacesL,
+            decimalPlacesR,
+            this instanceof Times ? decimalPlacesL + decimalPlacesR : 0 // If multiplication then decimal place value is sum left & right decimal places.
+            )
+
+        offset = math.multiply(answer, normalDistribution())
+        wrongAnswer = math.round(math.add(answer, offset), decimalPlaces)
+
+        return wrongAnswer
     }
 
     adjustForNoRegrouping() {
@@ -302,11 +323,5 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
-
-const num1 = new number.Decimal({sign: 'positive'})
-const num2 = new number.Decimal({sign: 'positive'})
-const op = new Times(num1, num2, {regrouping: false})
-console.log(op.generateQuestionString())
-console.log(op.generateAnswerChoices())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
