@@ -16,8 +16,8 @@ const OPERATOR = {
 
 const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
     return (
-        <section className="operator-form">
-            <div className="operator-form__selector">
+        <section className="config-form config-form--operator">
+            <div className="config-form__selector">
                 <label htmlFor="operator">
                     Operator
                 </label>
@@ -33,7 +33,7 @@ const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
                 </select>
             </div>
 
-            <div className="operator-form__options">
+            <div className="config-form__options">
                 {(operator.type === OPERATOR.PLUS ||
                 operator.type === OPERATOR.MINUS ||
                 operator.type === OPERATOR.TIMES) &&
@@ -58,6 +58,8 @@ const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
                 <label>
                     Answer format
                     <select
+                        style={{"marginLeft": "0.5rem"}}
+                        className="font-size--medium"
                         onChange={e => setOperator({...operator, answerFormat: e.target.value})}
                         value={operator.answerFormat}
                     >

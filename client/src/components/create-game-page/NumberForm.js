@@ -19,8 +19,8 @@ const NumberForm = ({ number, setNumber, label }) => {
     })
 
     return (
-        <section className="number-form">
-            <div className="number-form__selector">
+        <section className="config-form">
+            <div className="config-form__selector">
                 <label htmlFor="left-number">
                     {label}
                 </label>
@@ -37,7 +37,7 @@ const NumberForm = ({ number, setNumber, label }) => {
                 </select>
             </div>
 
-            <div className="number-form__options">
+            <div className="config-form__options config-form--number__options">
                 {(number.type === NUMBER.INTEGER || number.type === NUMBER.DECIMAL) &&
                 <div>
                     <label>
