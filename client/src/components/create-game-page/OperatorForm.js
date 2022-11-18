@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import Checkbox from '../core/Checkbox'
 
 const NUMBER = {
@@ -43,7 +44,7 @@ const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
 
                 {operator.type === OPERATOR.DIVIDE_BY &&
                 <Checkbox
-                    label="Has Remainder"
+                    label="Has remainder"
                     handleChange={e => setOperator({...operator, hasRemainder: e.target.value})}
                 />}
 
@@ -53,6 +54,17 @@ const OperatorForm = ({ operator, setOperator, leftNumType, rightNumType }) => {
                     handleChange={e => setOperator({...operator, commonDenominators: e.target.value})}
                 />
                 }
+
+                <label>
+                    Answer format
+                    <select
+                        onChange={e => setOperator({...operator, answerFormat: e.target.value})}
+                        value={operator.answerFormat}
+                    >
+                        <option>decimal</option>
+                        <option>ratio</option>
+                    </select>
+                </label>
 
             </div>
 
