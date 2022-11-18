@@ -98,10 +98,9 @@ class Operator {
         } else if (this instanceof DivideBy) {
             answer = math.divide(this.leftNum.value, this.rightNum.value)
         }
-        answer = math.round(answer, decimalPlaces)
+
         // Generate unique answer choices.
         let wrongAnswer, offset
-        
         while (choices.length < this.answerChoiceCount - 1) {
             if (this.leftNum instanceof number.Fraction || this.rightNum instanceof number.Fraction) {
                 const offsetNum = Math.round(answer.n * normalDistribution()) ////
@@ -303,5 +302,11 @@ class DivideBy extends Operator {
         return this.leftNum.valueToString() + ' / ' + this.rightNum.valueToString()
     }
 }
+
+const num1 = new number.Decimal({sign: 'positive'})
+const num2 = new number.Decimal({sign: 'positive'})
+const op = new Times(num1, num2, {regrouping: false})
+console.log(op.generateQuestionString())
+console.log(op.generateAnswerChoices())
 
 module.exports = {Operator: Operator, Plus: Plus, Minus: Minus, Times: Times, DivideBy: DivideBy}
