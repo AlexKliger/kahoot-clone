@@ -27,7 +27,13 @@ class Operator {
         this.allowImproperFractions = allowImproperFractions
     }
 
+    generateNewValues() {
+        this.leftNum.generateNewValue()
+        this.rightNum.generateNewValue()
+    }
+
     generateQuestionObject() {
+        this.generateNewValues()
         return {
             question: this.generateQuestionString(),
             ...this.generateAnswerChoices(),
