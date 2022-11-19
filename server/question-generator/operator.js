@@ -42,8 +42,8 @@ class Operator {
         if (leftNum instanceof number.Fraction) leftNum.allowImproper = this.allowImproperFractions
         if (rightNum instanceof number.Fraction) rightNum.allowImproper = this.allowImproperFractions
 
-        leftNum.generateNewValue()
-        rightNum.generateNewValue()
+        !leftNum.value && leftNum.generateNewValue()
+        !rightNum.value && rightNum.generateNewValue()
 
         // Adjust integers and decimals if regrouping is not selected.
         const numbersAreRegroupable =
@@ -140,7 +140,7 @@ class Operator {
             this instanceof Times ? decimalPlacesL + decimalPlacesR : 0 // If multiplication then decimal place value is sum left & right decimal places.
             )
 
-        offset = math.multiply(answer, normalDistribution())
+        offset = math.multiply(answer + 1, normalDistribution())
         wrongAnswer = math.round(math.add(answer, offset), decimalPlaces)
 
         return wrongAnswer
