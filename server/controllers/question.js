@@ -3,6 +3,8 @@ const sockets = require('../webSocketServer')
 
 let io = sockets.getSocketServer()
 
+async function next(req, res)
+
 module.exports = {
     next: async (req, res) => {
         console.log('/game/questions/next requested')
