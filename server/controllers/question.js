@@ -3,35 +3,34 @@ const sockets = require('../webSocketServer')
 
 let io = sockets.getSocketServer()
 
-async function next(req, res)
+async function next(req, res) {
+    console.log('/game/questions/next requested')
+    try {
+        const game = await Game.findOne({ gameId: req.body.gameId })
+        game && await game.nextQuestion()
+        io = sockets.getSocketServer()
+        io.to(req.body.gameId).emit('data', JSON.stringify(game))
+        res.json(game)
+    } catch (err) {
+        console.log(err)
+    }
+}
 
-module.exports = {
-    next: async (req, res) => {
-        console.log('/game/questions/next requested')
-        try {
-            const game = await Game.findOne({ gameId: req.body.gameId })
-            game && await game.nextQuestion()
-            io = sockets.getSocketServer()
-            io.to(req.body.gameId).emit('data', JSON.stringify(game))
-            res.json(game)
-        } catch (err) {
-            console.log(err)
-        }
-    },
-    previous: async (req, res) => {
-        console.log('/game/questions/previous requested')
-        try {
-            const game = await Game.findOne({ gameId: req.body.gameId })
-            game && await game.prevQuestion()
-            io = sockets.getSocketServer()
-            io.to(req.body.gameId).emit('data', JSON.stringify(game))
-            res.json(game)
-        } catch (err) {
-            console.log(err)
-        }
-    },
-    submitAnswer: async (req, res) => {
-        console.log('/game/questions/submitAnswer requested')
+async function previous(req, res) {
+    console.log('/game/questions/previous requested')
+    try {
+        const game = await Game.findOne({ gameId: req.body.gameId })
+        game && await game.prevQuestion()
+        io = sockets.getSocketServer()
+        io.to(req.body.gameId).emit('data', JSON.stringify(game))
+        res.json(game)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+async function submitAnswer(req, res) {
+    console.log('/game/questions/submitAnswer requested')
         try {
             // Find the game that contains the given question id.
             const game = await Game.findOne({ 'questions._id': req.params.questionId })
@@ -42,5 +41,10 @@ module.exports = {
         } catch (err) {
             console.log(err)
         }
-    }
+}
+
+module.exports = {
+    next,
+    previous,
+    submitAnswer
 }
