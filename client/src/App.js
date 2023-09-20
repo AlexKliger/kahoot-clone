@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { uid } from 'uid'
 import { io } from 'socket.io-client'
-import { createGame, joinGame, leaveGame } from './util/api'
+import { createGame, joinGame, leaveGame } from './networking/api'
 // Component imports
 import CreateGamePage from './components/create-game-page/CreateGamePage'
 import GamePage from './components/game-page/GamePage'

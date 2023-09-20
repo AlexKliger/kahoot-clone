@@ -1,4 +1,4 @@
-import {resetGame, nextQuestion, prevQuestion, submitAnswer, startGame } from '../../util/api'
+import {resetGame, nextQuestion, prevQuestion, startGame } from '../../networking/api'
 
 const GAME_STATE = {
     WAITING_FOR_PLAYERS: 'waiting-for-players',

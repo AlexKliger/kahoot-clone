@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { submitAnswer } from '../../util/api'
+import { submitAnswer } from '../../networking/api'
 
 const AnswerChoices = ({ question, setGame, playerId }) => {
   const choiceIsSelected = useCallback((choiceIndex) => {
