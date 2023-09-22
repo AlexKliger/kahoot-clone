@@ -1,8 +1,8 @@
 // Package imports
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { uid } from 'uid'
-import { io } from 'socket.io-client'
+import { socket } from './networking/socket'
 import { createGame, joinGame, leaveGame } from './networking/api'
 // Component imports
 import CreateGamePage from './components/create-game-page/CreateGamePage'
@@ -19,28 +19,19 @@ import './css/themes.css'
 function App() {
   const [playerId] = useState(localStorage.getItem('playerId'))
   const [game, setGame] = useState()
-  const [socket, setSocket] = useState()
 
   const navigate = useNavigate()
 
   const handleJoinGame = useCallback(async (playerName, gameId) => {
     setGame(await joinGame(playerId, playerName, gameId))
-
     navigate('/game/play', { replace: true })
-
-    const socket = io()
-    socket.on('connect', () => console.log('connected to socket'))
-    socket.on('data', (data) => setGame(JSON.parse(data)))    
     socket.emit('join room', gameId)
-
-    setSocket(socket)
   }, [navigate, playerId])
 
   const handleLeaveGame = useCallback(async () => {
     setGame(await leaveGame(playerId, game.gameId))
     navigate('/', { replace: true })
     socket.close()
-    setSocket(null)
   }, [navigate, playerId, socket, game])
 
   const handleCreateGame = useCallback(async (configs) => {
@@ -49,6 +40,11 @@ function App() {
     handleJoinGame('host', newGame.gameId)
     navigate('/game/play', { replace: true })
   }, [handleJoinGame, navigate, playerId, game])
+
+  useEffect(() => {
+    socket.on('connect', () => console.log('connected to socket'))
+    socket.on('data', (data) => setGame(JSON.parse(data)))
+  }, [])
 
   return (
     <div className="app">
