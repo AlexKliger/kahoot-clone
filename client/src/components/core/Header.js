@@ -1,7 +1,10 @@
-import { Route, Routes, useNavigate } from "react-router-dom" 
+import { useContext } from 'react'
+import { Route, Routes, useNavigate } from "react-router-dom"
+import { GameContext } from '../../context/GameContext'
 
-const Header = ({ gameId }) => {
+const Header = () => {
     const navigate = useNavigate()
+    const game = useContext(GameContext)
 
     return (
         <header className="header">
@@ -25,7 +28,7 @@ const Header = ({ gameId }) => {
                     <Route
                         path="/game/play"
                         element={
-                            <span className="font-size--extra-large">Game ID: {gameId}</span>
+                            <span className="font-size--extra-large">Game ID: {game ? game.gameId : ''}</span>
                         }
                     ></Route>
                 </Routes>
