@@ -25,10 +25,13 @@ async function create(req, res) {
 
 async function join(req, res) {
     console.log('/game/join requested')
+    console.table(req.body)
     try {
         const game = await Game.findOne({ gameId: req.body.gameId })
         game && game.addPlayer(req.body.playerId, req.body.playerName)
         io = socketServer.getSocketServer()
+        // Join game
+        io.in(req.body.socketId).socketsJoin(req.body.gameId)
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
         res.json(game)
     } catch (err) {
@@ -47,8 +50,8 @@ async function leave(req, res) {
         } else {
             game && game.removePlayer(req.body.playerId)
             io = socketServer.getSocketServer()
-            console.log('   gameId:', req.body.gameId)
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
+            io.in(req.body.socketId).socketsLeave(req.body.gameId)
             res.json(game)
         }
     } catch (err) {
