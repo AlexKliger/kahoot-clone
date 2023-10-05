@@ -1,30 +1,39 @@
 import { useCallback, useState } from "react"
 
 const JoinGameForm = ({ handleSubmit }) => {
-    const [name, setName] = useState('')
-    const [gameId, setGameId] = useState('')
+    const [fields, setFields] = useState({name: '', gameId: ''})
 
-    const onSubmit = useCallback(e => {
-        handleSubmit(name, gameId)
+    const onChange = useCallback(e => {
+        const newFields = {...fields}
+        newFields[e.target.name] = e.target.value
+        setFields(newFields)
+    }, [fields])
+
+    const onSubmit = useCallback(async e => {
         e.preventDefault()
-    }, [name, gameId])
+        await handleSubmit(fields)
+    }, [fields])
 
     return (
-        <form className="join-game-form" onSubmit={onSubmit}>
+        <form className="join-game-form" onSubmit={ onSubmit }>
             <input
                 className="join-game-form__input font-size--medium"
                 type="text"
-                value={name}
+                name="name"
+                value={ fields.name }
                 placeholder="Name"
-                onChange={e => setName(e.target.value)}
+                onChange={ onChange }
+                required
             ></input>
 
             <input
                 className="join-game-form__input font-size--medium"
                 type="text"
-                value={gameId}
+                name="gameId"
+                value={ fields.gameId }
                 placeholder="Game ID"
-                onChange={e => setGameId(e.target.value)}
+                onChange={ onChange }
+                required
             ></input>
 
             <input
