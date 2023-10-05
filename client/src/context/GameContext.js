@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react'
 import { socket } from '../networking/socket'
-import { joinGame as fetchJoinGame, createGame as fetchCreateGame } from '../networking/api'
+import { joinGame as fetchJoinGame, createGame as fetchCreateGame, leaveGame as fetchLeaveGame } from '../networking/api'
 import { uid } from 'uid'
 
 export const GameContext = createContext(null)
@@ -13,19 +13,24 @@ export default function GameProvider({ children }) {
 
     async function createGame(configs) {
         const game = await fetchCreateGame(playerId, configs)
-        joinGame('host', game.gameId)
-        setGame(game)
+        await joinGame('host', game.gameId)
     }
 
     async function joinGame(playerName, gameId) {
-        setGame(await fetchJoinGame(playerId, playerName, gameId))
         socket.emit('join room', gameId)
+        await fetchJoinGame(playerId, playerName, gameId)
+    }
+
+    async function leaveGame() {
+        await fetchLeaveGame(playerId, game.gameId)
+        socket.emit('leave room', game.gameId)
+        setGame(null)
     }
 
     useEffect(() => {
         socket.on('connect', () => console.log('connected to socket'))
         socket.on('data', (data) => setGame(JSON.parse(data)))
-    })
+    }, [])
 
     // useEffect(() => {
     //     async function fetchGameData() {
@@ -37,7 +42,8 @@ export default function GameProvider({ children }) {
         <GameContext.Provider value={ game }>
             <GameDispatchContext.Provider value={{
                 createGame,
-                joinGame
+                joinGame,
+                leaveGame
             }}>
                 {children}
             </GameDispatchContext.Provider>
