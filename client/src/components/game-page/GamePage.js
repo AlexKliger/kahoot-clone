@@ -1,3 +1,6 @@
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { GameContext, GameDispatchContext } from '../../context/GameContext'
 import GameScreen from './GameScreen'
 import HostControls from './HostControls'
 import Players from './Players'
@@ -9,7 +12,17 @@ const GAME_STATE = {
     GAME_ENDED: 'game-ended'
 }
 
-const GamePage = ({ game, setGame, handleLeaveGame, playerId }) => {
+const GamePage = ({ setGame, playerId }) => {
+    const game = useContext(GameContext)
+    const { leaveGame } = useContext(GameDispatchContext)
+
+    const navigate = useNavigate()
+
+    async function handleLeaveGame() {
+        leaveGame()
+        navigate('/')
+    }
+
     return (
         <section className="page page--game margin-centered">
             <div className="page--game__container">
