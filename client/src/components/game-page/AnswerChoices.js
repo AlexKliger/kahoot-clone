@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { submitAnswer } from '../../networking/api'
 
-const AnswerChoices = ({ question, setGame, playerId }) => {
+const AnswerChoices = ({ question, playerId }) => {
   const choiceIsSelected = useCallback((choiceIndex) => {
     const submittedAnswer = question.submittedAnswers[playerId]
     if (submittedAnswer) {
@@ -18,7 +18,7 @@ const AnswerChoices = ({ question, setGame, playerId }) => {
         <button
           className={`answer-choices__choice font-size--extra-large
             ${choiceIsSelected(key) && "answer-choices__choice--selected"}`}
-          onClick={async () => setGame(await submitAnswer(question._id, playerId, key))}
+          onClick={async () => await submitAnswer(question._id, playerId, key)}
         >
           {choice}
         </button>

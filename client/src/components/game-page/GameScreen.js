@@ -1,7 +1,7 @@
 import AnswerChoices from './AnswerChoices'
 import Question from './Question'
 
-const GameScreen = ({ question, setGame, playerId }) => {
+const GameScreen = ({ question, playerId }) => {
 
 
   return (
@@ -10,7 +10,6 @@ const GameScreen = ({ question, setGame, playerId }) => {
 
       <AnswerChoices
         question={ question }
-        setGame={ setGame }
         playerId={ playerId }
       />
     </section>
