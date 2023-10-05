@@ -17,26 +17,17 @@ export default function GameProvider({ children }) {
     }
 
     async function joinGame(playerName, gameId) {
-        socket.emit('join room', gameId)
-        await fetchJoinGame(playerId, playerName, gameId)
+        await fetchJoinGame(playerId, playerName, gameId, socket.id)
     }
 
     async function leaveGame() {
-        await fetchLeaveGame(playerId, game.gameId)
-        socket.emit('leave room', game.gameId)
-        setGame(null)
+        await fetchLeaveGame(playerId, game.gameId, socket.id)
     }
 
     useEffect(() => {
         socket.on('connect', () => console.log('connected to socket'))
         socket.on('data', (data) => setGame(JSON.parse(data)))
     }, [])
-
-    // useEffect(() => {
-    //     async function fetchGameData() {
-    //         setGame(await joinGame(playerId, pla))
-    //     }
-    // })
 
     return (
         <GameContext.Provider value={ game }>

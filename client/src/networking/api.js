@@ -5,16 +5,22 @@ export const createGame = async (hostId, configs) => {
     return await POST('/game/create', body)
 }
 
-export const joinGame = async (playerId, playerName, gameId) => {
+export const joinGame = async (playerId, playerName, gameId, socketId) => {
     const body = JSON.stringify({
         playerId,
         playerName,
-        gameId })
+        gameId,
+        socketId
+    })
     return await POST('/game/join', body)
 }
 
-export const leaveGame = async (playerId, gameId) => {
-    const body = JSON.stringify({ playerId, gameId })
+export const leaveGame = async (playerId, gameId, socketId) => {
+    const body = JSON.stringify({
+        playerId,
+        gameId,
+        socketId
+    })
     return await POST('/game/leave', body)
 }
 
