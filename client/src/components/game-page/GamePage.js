@@ -51,7 +51,10 @@ const GamePage = ({ setGame, playerId }) => {
                         playerId={playerId}
                     />
 
-                    <HostControls game={game} setGame={setGame} playerId={playerId} />
+                    <HostControls
+                        game={game}
+                        playerId={playerId}
+                    />
 
                     <button style={{"padding": "0.5rem 1rem"}} onClick={ handleLeaveGame }>Leave Game</button>
                 </aside>
