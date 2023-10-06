@@ -18,46 +18,16 @@ import './css/themes.css'
 
 function App() {
   const [playerId] = useState(localStorage.getItem('playerId'))
-  const [game, setGame] = useState()
-
-  const navigate = useNavigate()
-
-  const handleJoinGame = useCallback(async (playerName, gameId) => {
-    setGame(await joinGame(playerId, playerName, gameId))
-    navigate('/game/play', { replace: true })
-    socket.emit('join room', gameId)
-  }, [navigate, playerId])
-
-  const handleLeaveGame = useCallback(async () => {
-    setGame(await leaveGame(playerId, game.gameId))
-    navigate('/', { replace: true })
-    socket.close()
-  }, [navigate, playerId, socket, game])
-
-  const handleCreateGame = useCallback(async (configs) => {
-    const newGame = await createGame(playerId, configs)
-    setGame(newGame)
-    handleJoinGame('host', newGame.gameId)
-    navigate('/game/play', { replace: true })
-  }, [handleJoinGame, navigate, playerId, game])
-
-  useEffect(() => {
-    socket.on('connect', () => console.log('connected to socket'))
-    socket.on('data', (data) => setGame(JSON.parse(data)))
-  }, [])
 
   return (
     <div className="app">
-      <Header gameId={game ? game.gameId : ""} />
+      <Header />
 
       <Routes>
         <Route
           path="/"
           element={
-            <LandingPage
-              handleJoinGame={ handleJoinGame }
-              handleCreateGame={ handleCreateGame }
-            />
+            <LandingPage />
           }
         ></Route>
 
@@ -65,16 +35,13 @@ function App() {
           <Route
             path="play"
             element={ <GamePage
-                        game={ game }
-                        setGame={ setGame }
-                        handleLeaveGame={ handleLeaveGame }
-                        playerId={ playerId }
+                        playerId={ playerId } ///////////
                       /> }
           ></Route>
 
           <Route
             path="create"
-            element={ <CreateGamePage handleSubmit={ handleCreateGame } /> }
+            element={ <CreateGamePage /> }
           ></Route>
         </Route>
       </Routes>

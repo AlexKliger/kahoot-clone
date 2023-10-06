@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { GameDispatchContext } from '../../context/GameContext'
 import ConfigList from './ConfigList'
 import NumberForm from './NumberForm'
 import OperatorForm from './OperatorForm'
@@ -21,17 +23,21 @@ const OPERATOR = {
     DIVIDE_BY: '/'
 }
 
-const CreateGamePage = ( { handleSubmit }) => {
+const CreateGamePage = () => {
     const [leftNum, setLeftNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
     const [rightNum, setRightNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
     const [operator, setOperator] = useState({type: OPERATOR.PLUS, regrouping: false})
-    
     const [configs, setConfigs] = useState([])
 
-    const onSubmit = useCallback(e => {
-        handleSubmit(configs)
+    const { createGame } = useContext(GameDispatchContext)
+
+    const navigate = useNavigate()
+
+    const onSubmit = useCallback(async e => {
         e.preventDefault()
-    }, [configs, handleSubmit])
+        await createGame(configs)
+        navigate('/game/play', { replace: true })
+    }, [configs])
 
     return (
         <section className="page margin-centered">

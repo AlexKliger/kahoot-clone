@@ -35,7 +35,6 @@ const GamePage = ({ setGame, playerId }) => {
                     {game.state === GAME_STATE.GAME_STARTED &&
                     <GameScreen
                         question={game.questions[game.currentQuestion]}
-                        setGame={setGame}
                         playerId={playerId}
                     />
                     }
