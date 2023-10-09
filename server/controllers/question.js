@@ -10,7 +10,7 @@ async function next(req, res) {
         game && await game.nextQuestion()
         io = sockets.getSocketServer()
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
-        res.json(game)
+        res.status(200).json(game)
     } catch (err) {
         console.log(err)
     }
@@ -23,7 +23,7 @@ async function previous(req, res) {
         game && await game.prevQuestion()
         io = sockets.getSocketServer()
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
-        res.json(game)
+        res.json.status(200)(game)
     } catch (err) {
         console.log(err)
     }
@@ -37,7 +37,7 @@ async function submitAnswer(req, res) {
             game && await game.submitAnswer(req.params.questionId, req.body.playerId, req.body.answerIndex)
             io = sockets.getSocketServer()
             io.to(game.gameId).emit('data', JSON.stringify(game))
-            res.json(game)
+            res.json.status(200)(game)
         } catch (err) {
             console.log(err)
         }

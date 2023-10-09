@@ -17,7 +17,7 @@ async function create(req, res) {
                 hostId: req.body.hostId
             })
         await game.save()
-        res.json(game)
+        res.status(200).json(game)
     } catch (err) {
         console.log(err)
     }
@@ -33,7 +33,7 @@ async function join(req, res) {
         // Join game
         io.in(req.body.socketId).socketsJoin(req.body.gameId)
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
-        res.json(game)
+        res.status(200).json(game)
     } catch (err) {
         console.log(err)
     }
@@ -46,13 +46,13 @@ async function leave(req, res) {
         // If the host leaves, delete the game.
         if (req.body.playerId === game.hostId) {
             await game.delete()
-            res.json({message: 'game deleted'})
+            res.status(200).json({message: 'game deleted'})
         } else {
             game && game.removePlayer(req.body.playerId)
             io = socketServer.getSocketServer()
             io.to(req.body.gameId).emit('data', JSON.stringify(game))
             io.in(req.body.socketId).socketsLeave(req.body.gameId)
-            res.json(game)
+            res.status(200).json(game)
         }
     } catch (err) {
         console.log(err)
@@ -66,7 +66,7 @@ async function start(req, res) {
         await game.start()
         io = socketServer.getSocketServer()
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
-        res.json(game)
+        res.status(200).json(game)
     } catch (err) {
         console.log(err)   
     }
@@ -79,7 +79,7 @@ async function reset(req, res) {
         await game.reset()
         io = socketServer.getSocketServer()
         io.to(req.body.gameId).emit('data', JSON.stringify(game))
-        res.json(game)
+        res.status(200).json(game)
     } catch (err) {
         console.log(err)
     }
