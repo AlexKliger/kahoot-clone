@@ -104,7 +104,12 @@ class Operator {
         }
         // Insert the real answer into a random index.
         const answerIndex = Math.floor(Math.random() * this.answerChoiceCount)
-        choices.splice(answerIndex, 0, math.format(this.answerFormat === 'fraction' ? math.fraction(answer) : answer))
+        choices.splice(
+            answerIndex,
+            0,
+            math.format(
+                this.leftNum instanceof number.Fraction ? math.fraction(answer) : answer)
+            )
 
         return {choices, answerIndex}
     }
@@ -124,13 +129,14 @@ class Operator {
         } else if (this instanceof DivideBy) {
             answer = math.divide(valueL, valueR)
         }
-
-        return this.answerFormat === 'ratio' ? answer : math.number(answer)
+        
+        return this.leftNum instanceof number.Fraction ? answer : math.number(answer)
     }
 
     #getWrongAnswer(answer) {
         let wrongAnswer, offset
-        if (this.answerFormat === 'ratio') {
+        if (this.leftNum instanceof number.Fraction) {
+            console.log(answer)
             wrongAnswer = math.fraction(answer.n, answer.d)
             wrongAnswer.n += math.round(math.multiply(wrongAnswer.n, normalDistribution()))
             wrongAnswer.d += math.round(math.multiply(wrongAnswer.d, normalDistribution()))
