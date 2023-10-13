@@ -16,8 +16,7 @@ const Header = () => {
                         path='/'
                         element={
                             <button
-                                style={{"padding": "0.75rem"}}
-                                className="font-size--medium"
+                                className="border-2 rounded hover:bg-blue-400 transition p-4 text-xl"
                                 onClick={() => navigate('/game/create')}
                             >
                                 Host a Game

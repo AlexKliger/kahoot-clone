@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react"
 
+const inputStyle = "text-black border-2 borde-grey-400"
+
 const JoinGameForm = ({ handleSubmit }) => {
     const [fields, setFields] = useState({name: '', gameId: ''})
 
@@ -15,9 +17,9 @@ const JoinGameForm = ({ handleSubmit }) => {
     }, [fields])
 
     return (
-        <form className="join-game-form" onSubmit={ onSubmit }>
+        <form className="join-game-form bg-white p-4 rounded" onSubmit={ onSubmit }>
             <input
-                className="join-game-form__input font-size--medium"
+                className={"join-game-form__input font-size--medium " + inputStyle}
                 type="text"
                 name="name"
                 value={ fields.name }
@@ -27,7 +29,7 @@ const JoinGameForm = ({ handleSubmit }) => {
             ></input>
 
             <input
-                className="join-game-form__input font-size--medium"
+                className={"join-game-form__input font-size--medium " + inputStyle}
                 type="text"
                 name="gameId"
                 value={ fields.gameId }
@@ -37,7 +39,7 @@ const JoinGameForm = ({ handleSubmit }) => {
             ></input>
 
             <input
-                className="join-game-form__input font-size--medium"
+                className="join-game-form__input font-size--medium border-2 border-stone-800 bg-stone-700 cursor-pointer"
                 type="submit"
                 value="Join Game"
             ></input>
