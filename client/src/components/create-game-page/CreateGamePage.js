@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { GameDispatchContext } from '../../context/GameContext'
 import ConfigList from './ConfigList'
 import NumberForm from './NumberForm'
-import OperatorForm from './OperatorForm'
+import OperatorForm from './OperatorForm/_index'
 
 const NUMBER = {
     INTEGER: 'integer',
@@ -24,9 +24,15 @@ const OPERATOR = {
 }
 
 const CreateGamePage = () => {
-    const [leftNum, setLeftNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
-    const [rightNum, setRightNum] = useState({type: NUMBER.INTEGER, sign: SIGN.POSITIVE, digits: 1})
-    const [operator, setOperator] = useState({type: OPERATOR.PLUS, regrouping: false})
+    const [leftNum, setLeftNum] = useState({
+        type: NUMBER.INTEGER,
+        sign: SIGN.POSITIVE,
+        digits: 1
+    })
+    const [operator, setOperator] = useState({
+        type: OPERATOR.PLUS,
+        regrouping: false
+    })
     const [configs, setConfigs] = useState([])
 
     const { createGame } = useContext(GameDispatchContext)
@@ -52,21 +58,21 @@ const CreateGamePage = () => {
                     operator={operator}
                     setOperator={setOperator}
                     leftNumType={leftNum.type}
-                    rightNumType={rightNum.type}
+                    rightNumType={leftNum.type}
                 />
 
-                <NumberForm
+                {/* <NumberForm
                     number={rightNum}
                     setNumber={setRightNum}
                     label={"Right Number"}
-                />
+                /> */}
 
                 <div>
                     <div style={{"margin-bottom": "1rem","display": "flex", "justifyContent": "center", "gap": "1rem"}}>
                         <h3 className="font-size--large">Configs</h3>
                         <button
                             type="button"
-                            onClick={() => setConfigs([...configs, {left: leftNum, right: rightNum, operator: operator}])}
+                            onClick={() => setConfigs([...configs, {left: leftNum, right: leftNum, operator: operator}])}
                         >+</button>
                     </div>
                     <ConfigList configs={configs} setConfigs={setConfigs} />
