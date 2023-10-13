@@ -6,7 +6,7 @@ const NumberSelector = ({ onChange, value }) => {
     }
 
     return (
-        <div class="grid grid-cols-4 gap-2 text-center text-6x italic font-bold">
+        <div class="grid grid-cols-3 gap-2 text-center text-6x italic font-bold">
             {numbers.map((num, key) =>
                 <div
                     className={ "hover:bg-blue-400 border-2 border-white rounded p-4 cursor-pointer transition " + (value === num && "bg-blue-400 border-blue-400") }
