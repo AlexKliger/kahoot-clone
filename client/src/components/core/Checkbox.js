@@ -1,12 +1,12 @@
 const Checkbox = ({handleChange, label}) => {
     return (
-      <label>
-        {label || ""}
+      <label className="items-center text-2xl">
         <input
           type="checkbox"
           onChange={handleChange}
         >
         </input>
+        {" " + label || ""}
       </label>
     )
   }
