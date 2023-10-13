@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import NumberSelector from './NumberSelector'
 import Checkbox from '../core/Checkbox'
 
 const NUMBER = {
@@ -8,20 +8,37 @@ const NUMBER = {
 }
 
 const NumberForm = ({ number, setNumber, label }) => {
-    const handleSelectionChange = useCallback((e) => {
-        let inputs = {type: e.target.value}
-        if (e.target.value === NUMBER.DECIMAL) {
-            inputs = {...inputs, decimalPlaces: 1}
-        } else if (e.target.value === NUMBER.FRACTION) {
-            inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}            
+    // const handleSelectionChange = useCallback((e) => {
+    //     let inputs = {type: e.target.value}
+    //     if (e.target.value === NUMBER.DECIMAL) {
+    //         inputs = {...inputs, decimalPlaces: 1}
+    //     } else if (e.target.value === NUMBER.FRACTION) {
+    //         inputs = {...inputs, digitsInNum: 1, digitsInDen: 1}            
+    //     }
+    //     setNumber({...number, ...inputs})
+    // })
+
+    /// DO I EVEN NEED THIS?!
+    function handleSelectionChange(selection) {
+        // Each number type has unique properties that need to be set.
+        if (selection === NUMBER.INTEGER) {
+            setNumber({...number, type: selection})
+        } else if (selection == NUMBER.DECIMAL) {
+            setNumber({...number, type: selection, decimalPlaces: 1})
+        } else if (selection === NUMBER.FRACTION) {
+            setNumber({...number, type: selection, digitsInNum: 1, digitsInDen: 1})
         }
-        setNumber({...number, ...inputs})
-    })
+    }
 
     return (
         <section className="config-form">
             <div className="config-form__selector">
-                <label htmlFor="left-number">
+                <NumberSelector
+                    onChange={ (selection) => handleSelectionChange(selection) }
+                    value={ number.type }
+                 />
+
+                {/* <label htmlFor="left-number">
                     {label}
                 </label>
                 <select
@@ -34,7 +51,7 @@ const NumberForm = ({ number, setNumber, label }) => {
                     {Object.values(NUMBER).map((type, key) => (
                         <option value={type} key={key}>{type}</option>
                     ))}
-                </select>
+                </select> */}
             </div>
 
             <div className="config-form__options config-form--number__options">
