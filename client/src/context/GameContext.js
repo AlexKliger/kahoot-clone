@@ -11,8 +11,8 @@ const playerId = localStorage.getItem('playerId')
 export default function GameProvider({ children }) {
     const [game, setGame] = useState()
 
-    async function createGame(configs) {
-        const game = await fetchCreateGame(playerId, configs)
+    async function createGame(options) {
+        const game = await fetchCreateGame(playerId, options) // Need to be in an array because of how backend works for now
         await joinGame('host', game.gameId)
     }
 

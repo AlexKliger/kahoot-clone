@@ -1,7 +1,8 @@
-export const createGame = async (hostId, configs) => {
+export const createGame = async (hostId, options) => {
+    const optionsList = [options]
     const body = JSON.stringify({
         hostId,
-        configs})
+        configs: optionsList})
     return await POST('/game/create', body)
 }
 
