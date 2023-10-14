@@ -47,7 +47,7 @@ const CreateGamePage = () => {
     return (
         <section className="page margin-centered">
             <form onSubmit={onSubmit}>
-                <div className="flex gap-6">
+                <div className="flex gap-6 mb-6">
                     <MainForm
                         operator={ operator }
                         setOperator={ setOperator }
@@ -63,7 +63,11 @@ const CreateGamePage = () => {
                     />
                 </div>
 
-                <input style={{"padding": "0.5rem 1rem"}} className="font-size--medium" type="submit" value="Create"></input>
+                <input
+                    className="border-2 border-stone-800 rounded bg-stone-700 px-6 py-4 text-xl cursor-pointer"
+                    type="submit"
+                    value="Create"
+                ></input>
             </form>
         </section>
     )

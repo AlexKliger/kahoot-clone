@@ -16,7 +16,7 @@ const OPERATOR = {
 
 const OptionsForm = ({operator, setOperator, number, setNumber}) => {
     return (
-        <div className="w-72">
+        <div className="w-72 min-w-fit bg-white rounded text-black p-6">
             <Checkbox
                     label="Negative"
                     handleChange={e => setNumber({...number, sign: e.target.value ? 'negative' : 'positive'})}
