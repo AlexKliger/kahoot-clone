@@ -34,7 +34,7 @@ class Integer extends Number {
     generateNewValue() {
         const max = parseInt(Array(this.digits).fill(9).join(''))
         const min = parseInt(1 + Array(this.digits - 1).fill(0).join(''))
-        this.value = Math.floor(Math.random() * (max - min) + min) * (this.sign === SIGN.POSITIVE ? 1 : -1)
+        this.value = Math.floor(Math.random() * (max - min) + min) * (Math.round(Math.random()) && this.sign === SIGN.NEGATIVE ? -1 : 1)
         return this.value
     }
 }
