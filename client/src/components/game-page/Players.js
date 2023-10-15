@@ -1,7 +1,7 @@
 const Players = ({ submittedAnswers, players }) => {
   return(
     <ul className="players font-size--medium">
-      <h3 className="players__header font-size--large">Players</h3>
+      <h3 className="text-3xl mt-6">Players</h3>
       {
       players.map((player, key) => (
         <li
@@ -9,7 +9,7 @@ const Players = ({ submittedAnswers, players }) => {
           key={key}
         >
           <i className={`fas fa-star ${!Object.keys(submittedAnswers).includes(player.playerId) ? "hidden" : ""}`}></i>
-          <span style={{"font-weight": "bold"}}> {player.playerName}'s score: {player.score}</span>
+          <span style={{"font-weight": "bold"}}> {player.playerName}: {player.score}</span>
         </li>
       ))
       }

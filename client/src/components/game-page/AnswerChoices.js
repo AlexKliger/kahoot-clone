@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import { submitAnswer } from '../../networking/api'
 
+const answerChoiceStyle = "border-4 hover:bg-blue-400 transition rounded-xl p-16 text-3xl cursor-pointer "
+
 const AnswerChoices = ({ question, playerId }) => {
   const choiceIsSelected = useCallback((choiceIndex) => {
     const submittedAnswer = question.submittedAnswers[playerId]
@@ -12,16 +14,14 @@ const AnswerChoices = ({ question, playerId }) => {
   }, [question, playerId])
 
   return (
-    <ul className="answer-choices">
+    <ul className="grid grid-cols-2 gap-4 auto-cols-max">
     {question.choices.map((choice, key) => (
-      <li key={key}>
-        <button
-          className={`answer-choices__choice font-size--extra-large
-            ${choiceIsSelected(key) && "answer-choices__choice--selected"}`}
-          onClick={async () => await submitAnswer(question._id, playerId, key)}
-        >
-          {choice}
-        </button>
+      <li
+        className={answerChoiceStyle + (choiceIsSelected(key) && "bg-blue-400")}
+        onClick={async () => await submitAnswer(question._id, playerId, key)}
+        key={key}
+      >
+        {choice}
       </li>
     ))}   
     </ul>

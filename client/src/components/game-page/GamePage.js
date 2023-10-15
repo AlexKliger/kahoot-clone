@@ -44,18 +44,24 @@ const GamePage = ({ setGame, playerId }) => {
                     {game.state === GAME_STATE.GAME_STARTED &&
                     <h3 className="font-size--extra-large">Question {game.currentQuestion + 1}/{game.questions.length}</h3>}
 
+                    <HostControls
+                        game={game}
+                        playerId={playerId}
+                    />
+                    
                     <Players
                         players={game.players}
                         submittedAnswers={game.questions[game.currentQuestion].submittedAnswers}
                         playerId={playerId}
                     />
 
-                    <HostControls
-                        game={game}
-                        playerId={playerId}
-                    />
 
-                    <button style={{"padding": "0.5rem 1rem"}} onClick={ handleLeaveGame }>Leave Game</button>
+                    <button
+                        className="border-2 border-stone-800 rounded bg-red-500 text-white py-4"
+                        onClick={ handleLeaveGame }
+                    >
+                        Leave Game
+                    </button>
                 </aside>
             </div>
         </section>   

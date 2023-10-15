@@ -55,19 +55,21 @@ const CreateGamePage = () => {
                         setNumber={ setNumber }
                     />
                     
-                    <OptionsForm
-                        operator={ operator }
-                        setOperator={ setOperator }
-                        number={ number }
-                        setNumber={ setNumber }
-                    />
+                    <div className="w-72 min-w-fit bg-white rounded text-black p-6">
+                        <OptionsForm
+                            operator={ operator }
+                            setOperator={ setOperator }
+                            number={ number }
+                            setNumber={ setNumber }
+                        />
+                        <input
+                            className="border-2 border-stone-800 rounded bg-stone-700 h-16 mt-12 w-full text-xl text-white cursor-pointer"
+                            type="submit"
+                            value="Create"
+                        ></input>
+                    </div>
                 </div>
 
-                <input
-                    className="border-2 border-stone-800 rounded bg-stone-700 px-6 py-4 text-xl cursor-pointer"
-                    type="submit"
-                    value="Create"
-                ></input>
             </form>
         </section>
     )
