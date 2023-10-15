@@ -37,7 +37,7 @@ async function submitAnswer(req, res) {
             game && await game.submitAnswer(req.params.questionId, req.body.playerId, req.body.answerIndex)
             io = sockets.getSocketServer()
             io.to(game.gameId).emit('data', JSON.stringify(game))
-            res.json.status(200)(game)
+            res.status(200).json(game)
         } catch (err) {
             console.log(err)
         }
