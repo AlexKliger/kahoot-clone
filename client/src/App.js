@@ -1,18 +1,17 @@
 // Package imports
-import { useCallback, useEffect, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import { uid } from 'uid'
-import { socket } from './networking/socket'
-import { createGame, joinGame, leaveGame } from './networking/api'
 // Component imports
 import CreateGamePage from './components/create-game-page/CreateGamePage'
 import GamePage from './components/game-page/GamePage'
 import Header from './components/core/Header'
 import LandingPage from './components/landing-page/LandingPage'
 // CSS import
-import './css/app.css';
+import './css/app.css'
 import './css/modules.css'
 import './css/themes.css'
+import './css/tailwind.css'
 
 !localStorage.getItem('playerId') && localStorage.setItem('playerId', uid(4))
 
